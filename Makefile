@@ -32,7 +32,6 @@ image:
 	cp -r $(BUSYBOX_SRC)/build/_install $(INITRAMFS_TMP_DIR)
 	cd $(INITRAMFS_TMP_DIR)/ && \
 		rm -f linuxrc && \
-		rm -rf usr && \
 		mkdir {etc,opt,proc,sys} && \
 		mkdir etc/init.d && \
 		cp ../../settings/init init && \
@@ -41,7 +40,7 @@ image:
 		cp ../../settings/resolv.conf etc/resolv.conf && \
 		cp ../../settings/rcS etc/init.d/rcS && \
 		chmod +x etc/init.d/rcS && \
-		find . -print0 | cpio --null -ov --format=newc -R +0:+0 | \
+		find . -print0 | cpio --null -o --format=newc -R +0:+0 | \
 		gzip > ../initramfs.img
 
 build: kernel-build busybox-build image
