@@ -41,7 +41,7 @@ image:
 		cp ../../settings/resolv.conf etc/resolv.conf && \
 		cp ../../settings/rcS etc/init.d/rcS && \
 		chmod +x etc/init.d/rcS && \
-		find . -print0 | cpio --null -ov --format=newc | \
+		find . -print0 | cpio --null -ov --format=newc -R +0:+0 | \
 		gzip > ../initramfs.img
 
 build: kernel-build busybox-build image
