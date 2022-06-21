@@ -1,5 +1,5 @@
-busybox-*/
-initramfs.img
-initramfs.tmp/
-linux-*/
-vmlinuz
+src/busybox-*/
+src/linux-*/
+bin/initramfs.img
+bin/initramfs.tmp/
+bin/vmlinuz
