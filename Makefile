@@ -48,8 +48,13 @@ image:
 vmdk:
 	truncate -s 1M bin/BRLinux.img
 	truncate -s 63M bin/BRLinux.img.part1
-	mkfs.ext4 bin/BRLinux.img.part1
+	yes | mkfs.ext4 bin/BRLinux.img.part1
 	cat bin/BRLinux.img.part1 >>bin/BRLinux.img
+	mkdir bin/BRLinux.img.part1.mount
+	fuse2fs bin/BRLinux.img.part1 bin/BRLinux.img.part1.mount \
+		-o fakeroot
+	fusermount -u bin/BRLinux.img.part1.mount
+	rm -rf bin/BRLinux.img.part1.mount
 	rm -f bin/BRLinux.img.part1
 	parted -s bin/BRLinux.img \
 		mklabel msdos \
