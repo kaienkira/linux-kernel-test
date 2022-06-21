@@ -3,6 +3,7 @@ LINUX_KERNEL_ENV = O=build ARCH=x86
 BUSYBOX_SRC = src/busybox-1.35.0
 BUSYBOX_ENV = O=build ARCH=x86
 INITRAMFS_TMP_DIR=bin/initramfs.tmp
+INITRAMFS_TMP2_DIR=bin/initramfs.tmp2
 QEMU_PROG = qemu-system-x86_64
 QEMU_ARGS = \
 	-enable-kvm \
@@ -16,7 +17,7 @@ QEMU_ARGS = \
 	-append "console=ttyS0"
 
 .PHONY: \
-run run-graphic image \
+run run-graphic image vmdk \
 build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean
@@ -42,6 +43,18 @@ image:
 		chmod +x etc/init.d/rcS && \
 		find . -print0 | cpio --null -o --format=newc -R +0:+0 | \
 		gzip > ../initramfs.img
+	rm -rf $(INITRAMFS_TMP_DIR)
+
+vmdk:
+	truncate -s 1M bin/BRLinux.img
+	truncate -s 63M bin/BRLinux.img.part1
+	mkfs.ext4 bin/BRLinux.img.part1
+	cat bin/BRLinux.img.part1 >>bin/BRLinux.img
+	rm -f bin/BRLinux.img.part1
+	parted -s bin/BRLinux.img \
+		mklabel msdos \
+		mkpart primary ext4 1MiB 100% \
+		set 1 boot on
 
 build: kernel-build busybox-build image
 

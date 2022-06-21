@@ -2,4 +2,5 @@ src/busybox-*/
 src/linux-*/
 bin/initramfs.img
 bin/initramfs.tmp/
+bin/BRLinux.img*
 bin/vmlinuz
