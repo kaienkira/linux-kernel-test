@@ -1,4 +1,5 @@
 src/busybox-*/
+src/grub-*/
 src/linux-*/
 bin/initramfs.img
 bin/initramfs.tmp/
