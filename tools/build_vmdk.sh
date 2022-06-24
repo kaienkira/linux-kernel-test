@@ -16,18 +16,27 @@ grub_src_dir=`readlink -f "$2"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings`
 image_file=$bin_dir/BRLinux.img
+image_file_part1=$bin_dir/BRLinux.img.part1
 initramfs_file=$bin_dir/BRLinux.initramfs.img
 initramfs_tmp_dir=$bin_dir/BRLinux.initramfs.tmp
 
 do_cleanup()
 {
+    rm -f "$image_file_part1"
     rm -f "$initramfs_file"
     rm -rf "$initramfs_tmp_dir"
 }
 trap do_cleanup EXIT
 
-truncate -s 64MiB "$image_file"
+truncate -s 1MiB "$image_file"
 if [ $? -ne 0 ]; then exit 1; fi
+truncate -s 63MiB "$image_file_part1"
+if [ $? -ne 0 ]; then exit 1; fi
+mkfs.ext4 "$image_file_part1"
+if [ $? -ne 0 ]; then exit 1; fi
+cat "$image_file_part1" >> "$image_file"
+if [ $? -ne 0 ]; then exit 1; fi
+
 parted -s "$image_file" \
     mklabel msdos \
     mkpart primary ext4 1MiB 100% \
@@ -46,7 +55,7 @@ cd "$initramfs_tmp_dir"/_install
 if [ $? -ne 0 ]; then exit 1; fi
 rm -f linuxrc
 if [ $? -ne 0 ]; then exit 1; fi
-mkdir {opt,proc,sys}
+mkdir {boot,opt,proc,sys}
 if [ $? -ne 0 ]; then exit 1; fi
 cp -r "$grub_src_dir"/build/_install/opt/grub opt
 if [ $? -ne 0 ]; then exit 1; fi
@@ -60,11 +69,20 @@ echo \
 mount -t proc none /proc
 mount -t sysfs none /sys
 
+mknod -m 666 /dev/null c 1 3
+mknod -m 666 /dev/zero c 1 5
+mknod -m 444 /dev/random c 1 8
+mknod -m 444 /dev/urandom c 1 9
+mknod -m 666 /dev/tty0 c 4 0
 mknod -m 666 /dev/ttyS0 c 4 64
 mknod -m 666 /dev/sda b 8 0
 mknod -m 666 /dev/sda1 b 8 1
 
-exec /bin/cttyhack /bin/sh
+mount /dev/sda1 /boot
+/opt/grub/sbin/grub-install /dev/sda
+cp /opt/vmlinuz /boot
+cp /opt/initramfs.img /boot
+exec /bin/sh
 
 ' >init
 if [ $? -ne 0 ]; then exit 1; fi
