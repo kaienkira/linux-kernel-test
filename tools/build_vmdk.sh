@@ -15,6 +15,7 @@ busybox_src_dir=`readlink -f "$1"`
 grub_src_dir=`readlink -f "$2"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings`
+vmdk_file=$bin_dir/BRLinux.vmdk
 image_file=$bin_dir/BRLinux.img
 image_file_part1=$bin_dir/BRLinux.img.part1
 initramfs_file=$bin_dir/BRLinux.initramfs.img
@@ -22,6 +23,7 @@ initramfs_tmp_dir=$bin_dir/BRLinux.initramfs.tmp
 
 do_cleanup()
 {
+    rm -f "$image_file"
     rm -f "$image_file_part1"
     rm -f "$initramfs_file"
     rm -rf "$initramfs_tmp_dir"
@@ -105,5 +107,9 @@ qemu-system-x86_64 \
     -machine q35 \
     -cpu host -smp 1 -m 128M \
     -drive driver=raw,file="$image_file"
+if [ $? -ne 0 ]; then exit 1; fi
+
+qemu-img convert -f raw -O vmdk "$image_file" "$vmdk_file"
+if [ $? -ne 0 ]; then exit 1; fi
 
 exit 0
