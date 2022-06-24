@@ -55,7 +55,7 @@ cd "$initramfs_tmp_dir"/_install
 if [ $? -ne 0 ]; then exit 1; fi
 rm -f linuxrc
 if [ $? -ne 0 ]; then exit 1; fi
-mkdir {boot,opt,proc,sys}
+mkdir {boot,etc,opt,proc,sys}
 if [ $? -ne 0 ]; then exit 1; fi
 cp -r "$grub_src_dir"/build/_install/opt/grub opt
 if [ $? -ne 0 ]; then exit 1; fi
@@ -82,11 +82,15 @@ mount /dev/sda1 /boot
 /opt/grub/sbin/grub-install /dev/sda
 cp /opt/vmlinuz /boot
 cp /opt/initramfs.img /boot
-exec /bin/sh
 
+exec /sbin/init
 ' >init
 if [ $? -ne 0 ]; then exit 1; fi
 chmod +x init
+if [ $? -ne 0 ]; then exit 1; fi
+echo \
+'::sysinit:/sbin/poweroff
+' >etc/inittab
 if [ $? -ne 0 ]; then exit 1; fi
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
     gzip > "$initramfs_file"
