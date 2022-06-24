@@ -19,7 +19,7 @@ qemu_args=()
 qemu_args+=(-enable-kvm)
 qemu_args+=(-kernel "$bin_dir"/vmlinuz)
 qemu_args+=(-initrd "$bin_dir"/initramfs.img)
-qemu_args+=(-append 'console=ttyS0')
+qemu_args+=(-append 'tsc=nowatchdog console=ttyS0')
 
 qemu_network_args=$(printf \
     'net=%s,dhcpstart=%s,hostfwd=%s' \
@@ -43,4 +43,4 @@ then
     qemu_args+=(-nographic)
 fi
 
-"$qemu_prog" ${qemu_args[@]}
+"$qemu_prog" "${qemu_args[@]}"
