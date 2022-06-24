@@ -84,6 +84,14 @@ mount /dev/sda1 /boot
 /opt/grub/sbin/grub-install /dev/sda
 cp /opt/vmlinuz /boot
 cp /opt/initramfs.img /boot
+echo "
+insmod part_msdos
+insmod ext2
+menuentry BRLinux {
+    linux (hd0,msdos1)/vmlinuz
+    initrd (hd0,msdos1)/initramfs.img
+}
+" > /boot/grub/grub.cfg
 
 exec /sbin/init
 ' >init
@@ -103,7 +111,7 @@ qemu-system-x86_64 \
     -nographic \
     -kernel "$bin_dir"/vmlinuz \
     -initrd "$initramfs_file" \
-    -append 'console=ttyS0' \
+    -append 'tsc=nowatchdog console=ttyS0' \
     -machine q35 \
     -cpu host -smp 1 -m 128M \
     -drive driver=raw,file="$image_file"
