@@ -1,5 +1,6 @@
 src/busybox-*/
 src/grub-*/
+src/iptables-*/
 src/linux-*/
 bin/initramfs.img
 bin/initramfs.tmp/

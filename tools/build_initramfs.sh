@@ -6,12 +6,13 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
     exit 1
 fi
 
 busybox_src_dir=`readlink -f "$1"`
+iptables_src_dir=`readlink -f "$2"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings`
 initramfs_tmp_dir=$bin_dir/initramfs.tmp
@@ -50,6 +51,7 @@ cp "$settings_dir"/rcS etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
+
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
     gzip > "$bin_dir"/initramfs.img
 if [ $? -ne 0 ]; then exit 1; fi

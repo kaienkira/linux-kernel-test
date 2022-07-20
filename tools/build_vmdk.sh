@@ -102,6 +102,7 @@ echo \
 '::sysinit:/sbin/poweroff
 ' >etc/inittab
 if [ $? -ne 0 ]; then exit 1; fi
+
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
     gzip > "$initramfs_file"
 if [ $? -ne 0 ]; then exit 1; fi

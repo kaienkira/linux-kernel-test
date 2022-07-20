@@ -3,12 +3,14 @@ LINUX_KERNEL_ENV = O=build ARCH=x86
 BUSYBOX_SRC_DIR = src/busybox-1.35.0
 BUSYBOX_ENV = O=build ARCH=x86
 GRUB_SRC_DIR = src/grub-2.06
+IPTABLES_SRC_DIR = src/iptables-1.8.8
 QEMU_ARCH = x86_64
 
 .PHONY: \
 default build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
+iptables-build iptables-clean \
 initramfs run run-graphic vmdk
 
 default: run
@@ -54,16 +56,35 @@ grub-build:
 		cd build && \
 		mkdir -p _install && \
 		../configure LDFLAGS="-static" \
-			--disable-werror --prefix=/opt/grub \
-			--with-platform="pc" --target="i386" && \
+			--disable-werror \
+			--prefix=/opt/grub \
+			--with-platform="pc" \
+			--target="i386" && \
 		make -j4 && \
 		make DESTDIR=`readlink -f _install` install
 
 grub-clean:
 	rm -rf $(GRUB_SRC_DIR)/build
 
+iptables-build:
+	cd $(IPTABLES_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			CFLAGS="-I`readlink -f ..`" \
+			LDFLAGS="-static" \
+			--prefix=/ \
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
+
+iptables-clean:
+	rm -rf $(IPTABLES_SRC_DIR)/build
+
 initramfs:
-	bash tools/build_initramfs.sh $(BUSYBOX_SRC_DIR)
+	bash tools/build_initramfs.sh "$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
 
 run:
 	bash tools/run_qemu.sh $(QEMU_ARCH) nographic
@@ -72,4 +93,4 @@ run-graphic:
 	bash tools/run_qemu.sh $(QEMU_ARCH) graphic
 
 vmdk:
-	bash tools/build_vmdk.sh $(BUSYBOX_SRC_DIR) $(GRUB_SRC_DIR)
+	bash tools/build_vmdk.sh "$(BUSYBOX_SRC_DIR)" "$(GRUB_SRC_DIR)"
