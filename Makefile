@@ -55,7 +55,7 @@ grub-build:
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
-		../configure LDFLAGS="-static" \
+		../configure LDFLAGS="--static" \
 			--disable-werror \
 			--prefix=/opt/grub \
 			--with-platform="pc" \
@@ -73,7 +73,7 @@ iptables-build:
 		mkdir -p _install && \
 		../configure \
 			CFLAGS="-I`readlink -f ..`" \
-			LDFLAGS="-static" \
+			LDFLAGS="--static" \
 			--prefix=/ \
 			--enable-static \
 			--disable-shared && \
