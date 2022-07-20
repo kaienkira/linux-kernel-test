@@ -1,20 +1,24 @@
-LINUX_KERNEL_SRC_DIR = src/linux-5.19-rc7
+LINUX_KERNEL_SRC_DIR = $(abspath src/linux-5.19-rc7)
 LINUX_KERNEL_ENV = O=build ARCH=x86
-BUSYBOX_SRC_DIR = src/busybox-1.35.0
+BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
-GRUB_SRC_DIR = src/grub-2.06
-IPTABLES_SRC_DIR = src/iptables-1.8.8
+GRUB_SRC_DIR = $(abspath src/grub-2.06)
+LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
+IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
 QEMU_ARCH = x86_64
 
 .PHONY: \
 default build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
+libnfnetlink-build libnfnetlink-clean \
 iptables-build iptables-clean \
-initramfs run run-graphic vmdk
+initramfs vmdk \
+run run-graphic
 
 default: run
 
+###############################################################################
 build: kernel-build busybox-build grub-build initramfs 
 
 clean: kernel-clean busybox-clean grub-clean
@@ -24,6 +28,7 @@ clean: kernel-clean busybox-clean grub-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.img
 
+###############################################################################
 kernel-build:
 	cd $(LINUX_KERNEL_SRC_DIR) && \
 		make $(LINUX_KERNEL_ENV) \
@@ -36,6 +41,7 @@ kernel-clean:
 	cd $(LINUX_KERNEL_SRC_DIR) && \
 		make $(LINUX_KERNEL_ENV) distclean
 
+###############################################################################
 busybox-build:
 	mkdir -p $(BUSYBOX_SRC_DIR)/build
 	cd $(BUSYBOX_SRC_DIR) && \
@@ -50,12 +56,14 @@ busybox-clean:
 	cd $(BUSYBOX_SRC_DIR) && \
 		if [ -d $(BUSYBOX_SRC_DIR)/build ]; then make $(BUSYBOX_ENV) distclean; fi
 
+###############################################################################
 grub-build:
 	cd $(GRUB_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
-		../configure LDFLAGS="--static" \
+		../configure \
+			LDFLAGS="--static" \
 			--disable-werror \
 			--prefix=/opt/grub \
 			--with-platform="pc" \
@@ -66,13 +74,26 @@ grub-build:
 grub-clean:
 	rm -rf $(GRUB_SRC_DIR)/build
 
+###############################################################################
+libnfnetlink-build:
+	cd $(LIBNFNETLINK_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			--prefix=/ \
+
+libnfnetlink-clean:
+	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
+
+###############################################################################
 iptables-build:
 	cd $(IPTABLES_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
 		../configure \
-			CFLAGS="-I`readlink -f ..`" \
+			CFLAGS="-I$(IPTABLES_SRC_DIR)" \
 			LDFLAGS="--static" \
 			--prefix=/ \
 			--enable-static \
@@ -83,14 +104,16 @@ iptables-build:
 iptables-clean:
 	rm -rf $(IPTABLES_SRC_DIR)/build
 
+###############################################################################
 initramfs:
 	bash tools/build_initramfs.sh "$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
 
+vmdk:
+	bash tools/build_vmdk.sh "$(BUSYBOX_SRC_DIR)" "$(GRUB_SRC_DIR)"
+
+###############################################################################
 run:
 	bash tools/run_qemu.sh $(QEMU_ARCH) nographic
 
 run-graphic:
 	bash tools/run_qemu.sh $(QEMU_ARCH) graphic
-
-vmdk:
-	bash tools/build_vmdk.sh "$(BUSYBOX_SRC_DIR)" "$(GRUB_SRC_DIR)"

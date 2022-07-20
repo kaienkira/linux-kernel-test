@@ -1,6 +1,7 @@
 src/busybox-*/
 src/grub-*/
 src/iptables-*/
+src/libnfnetlink-*/
 src/linux-*/
 bin/initramfs.img
 bin/initramfs.tmp/
