@@ -35,7 +35,7 @@ cd "$initramfs_tmp_dir"/_install
 if [ $? -ne 0 ]; then exit 1; fi
 rm -f linuxrc
 if [ $? -ne 0 ]; then exit 1; fi
-mkdir {etc,opt,proc,sys}
+mkdir {etc,opt,proc,run,sys}
 if [ $? -ne 0 ]; then exit 1; fi
 mkdir etc/init.d
 if [ $? -ne 0 ]; then exit 1; fi
@@ -50,6 +50,8 @@ if [ $? -ne 0 ]; then exit 1; fi
 cp "$settings_dir"/rcS etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
+if [ $? -ne 0 ]; then exit 1; fi
+cp "$iptables_src_dir"/build/_install/sbin/* sbin/
 if [ $? -ne 0 ]; then exit 1; fi
 
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |

@@ -6,7 +6,9 @@ GRUB_SRC_DIR = $(abspath src/grub-2.06)
 ###############################################################################
 IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
 LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
+LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
+LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
 ###############################################################################
 QEMU_ARCH = x86_64
 
@@ -21,12 +23,9 @@ run run-graphic
 default: run
 
 ###############################################################################
-build: kernel-build busybox-build grub-build initramfs 
+build: kernel-build busybox-build grub-build iptables-build initramfs
 
-clean: kernel-clean busybox-clean grub-clean
-	rm -rf $(LINUX_KERNEL_SRC_DIR)/build
-	rm -rf $(BUSYBOX_SRC_DIR)/build
-	rm -rf $(GRUB_SRC_DIR)/build
+clean: kernel-clean busybox-clean grub-clean iptables-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.img
 
@@ -58,8 +57,7 @@ busybox-build:
 		make $(BUSYBOX_ENV) install
 
 busybox-clean:
-	cd $(BUSYBOX_SRC_DIR) && \
-		if [ -d $(BUSYBOX_SRC_DIR)/build ]; then make $(BUSYBOX_ENV) distclean; fi
+	rm -rf $(BUSYBOX_SRC_DIR)/build
 
 ###############################################################################
 grub-build:
@@ -91,12 +89,36 @@ iptables-build:
 			--disable-shared && \
 		make -j4 && \
 		make DESTDIR=`readlink -f _install` install
+	cd $(LIBNFTNL_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			CFLAGS="-I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
+			        -I$(LIBMNL_SRC_DIR)/build/_install/include" \
+			--prefix=/ \
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
 	cd $(LIBNFNETLINK_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
 		../configure \
 			CFLAGS="-I$(LINUX_KERNEL_SRC_DIR)/build/_install/include" \
+			--prefix=/ \
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
+	cd $(LIBNETFILTER_CONNTRACK_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			CFLAGS="-I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
+                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include" \
 			--prefix=/ \
 			--enable-static \
 			--disable-shared && \
@@ -110,10 +132,14 @@ iptables-build:
 			CFLAGS="-I$(IPTABLES_SRC_DIR) \
                     -I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
                     -I$(LIBMNL_SRC_DIR)/build/_install/include \
-                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include" \
+                    -I$(LIBNFTNL_SRC_DIR)/build/_install/include \
+                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include \
+                    -I$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/include" \
 			LDFLAGS="--static \
                      -L$(LIBMNL_SRC_DIR)/build/_install/lib \
-                     -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib" \
+                     -L$(LIBNFTNL_SRC_DIR)/build/_install/lib \
+                     -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib \
+                     -L$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/lib" \
 			--prefix=/ \
 			--enable-static \
 			--disable-shared && \
@@ -122,7 +148,9 @@ iptables-build:
 
 iptables-clean:
 	rm -rf $(IPTABLES_SRC_DIR)/build
+	rm -rf $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
 	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
+	rm -rf $(LIBNFTNL_SRC_DIR)/build
 	rm -rf $(LIBMNL_SRC_DIR)/build
 
 ###############################################################################
