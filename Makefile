@@ -3,15 +3,16 @@ LINUX_KERNEL_ENV = O=build ARCH=x86
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
 GRUB_SRC_DIR = $(abspath src/grub-2.06)
-LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
+###############################################################################
 IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
+LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
+###############################################################################
 QEMU_ARCH = x86_64
 
 .PHONY: \
 default build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
-libnfnetlink-build libnfnetlink-clean \
 iptables-build iptables-clean \
 initramfs vmdk \
 run run-graphic
@@ -36,10 +37,13 @@ kernel-build:
 	cd $(LINUX_KERNEL_SRC_DIR) && \
 		make $(LINUX_KERNEL_ENV) bzImage -j4
 	cp $(LINUX_KERNEL_SRC_DIR)/build/arch/x86_64/boot/bzImage bin/vmlinuz
+	mkdir -p $(LINUX_KERNEL_SRC_DIR)/build/_install
+	cd $(LINUX_KERNEL_SRC_DIR) && \
+		make $(LINUX_KERNEL_ENV) headers_install \
+			INSTALL_HDR_PATH=$(LINUX_KERNEL_SRC_DIR)/build/_install
 
 kernel-clean:
-	cd $(LINUX_KERNEL_SRC_DIR) && \
-		make $(LINUX_KERNEL_ENV) distclean
+	rm -rf $(LINUX_KERNEL_SRC_DIR)/build
 
 ###############################################################################
 busybox-build:
@@ -75,26 +79,28 @@ grub-clean:
 	rm -rf $(GRUB_SRC_DIR)/build
 
 ###############################################################################
-libnfnetlink-build:
+iptables-build:
 	cd $(LIBNFNETLINK_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
 		../configure \
+			CFLAGS="-I$(LINUX_KERNEL_SRC_DIR)/build/_install/include" \
 			--prefix=/ \
-
-libnfnetlink-clean:
-	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
-
-###############################################################################
-iptables-build:
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
 	cd $(IPTABLES_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
 		mkdir -p _install && \
 		../configure \
-			CFLAGS="-I$(IPTABLES_SRC_DIR)" \
-			LDFLAGS="--static" \
+			CFLAGS="-I$(IPTABLES_SRC_DIR) \
+                    -I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
+                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include" \
+			LDFLAGS="--static \
+                     -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib" \
 			--prefix=/ \
 			--enable-static \
 			--disable-shared && \
@@ -103,6 +109,7 @@ iptables-build:
 
 iptables-clean:
 	rm -rf $(IPTABLES_SRC_DIR)/build
+	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
 
 ###############################################################################
 initramfs:

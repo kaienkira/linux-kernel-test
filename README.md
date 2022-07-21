@@ -1,3 +1,3 @@
 # linux-kernel-test
 
-pacman -S base-devel bc qemu-full
+pacman -S base-devel bc qemu-full rsync
