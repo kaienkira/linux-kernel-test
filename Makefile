@@ -5,6 +5,7 @@ BUSYBOX_ENV = O=build ARCH=x86
 GRUB_SRC_DIR = $(abspath src/grub-2.06)
 ###############################################################################
 IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
+LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 ###############################################################################
 QEMU_ARCH = x86_64
@@ -80,6 +81,16 @@ grub-clean:
 
 ###############################################################################
 iptables-build:
+	cd $(LIBMNL_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			--prefix=/ \
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
 	cd $(LIBNFNETLINK_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
@@ -98,8 +109,10 @@ iptables-build:
 		../configure \
 			CFLAGS="-I$(IPTABLES_SRC_DIR) \
                     -I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
+                    -I$(LIBMNL_SRC_DIR)/build/_install/include \
                     -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include" \
 			LDFLAGS="--static \
+                     -L$(LIBMNL_SRC_DIR)/build/_install/lib \
                      -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib" \
 			--prefix=/ \
 			--enable-static \
@@ -110,6 +123,7 @@ iptables-build:
 iptables-clean:
 	rm -rf $(IPTABLES_SRC_DIR)/build
 	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
+	rm -rf $(LIBMNL_SRC_DIR)/build
 
 ###############################################################################
 initramfs:
