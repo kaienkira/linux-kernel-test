@@ -1,4 +1,4 @@
-LINUX_KERNEL_SRC_DIR = $(abspath src/linux-5.19-rc8)
+LINUX_KERNEL_SRC_DIR = $(abspath src/linux-5.19)
 LINUX_KERNEL_ENV = O=build ARCH=x86
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
