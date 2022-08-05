@@ -6,16 +6,17 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 2 ]
+if [ $# -ne 3 ]
 then
     exit 1
 fi
 
-busybox_src_dir=`readlink -f "$1"`
-iptables_src_dir=`readlink -f "$2"`
+vm_name=$1
+busybox_src_dir=`readlink -f "$2"`
+iptables_src_dir=`readlink -f "$3"`
 bin_dir=`readlink -f "$script_path"/../bin`
-settings_dir=`readlink -f "$script_path"/../settings`
-initramfs_tmp_dir=$bin_dir/initramfs.tmp
+settings_dir=`readlink -f "$script_path"/../settings/vm_$vm_name`
+initramfs_tmp_dir=$bin_dir/initramfs.$vm_name.tmp
 
 do_cleanup()
 {
@@ -51,11 +52,12 @@ cp "$settings_dir"/rcS etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
+cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
 cp "$iptables_src_dir"/build/_install/sbin/* sbin/
 if [ $? -ne 0 ]; then exit 1; fi
 
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
-    gzip > "$bin_dir"/initramfs.img
+    gzip > "$bin_dir"/initramfs."$vm_name".img
 if [ $? -ne 0 ]; then exit 1; fi
 
 exit 0

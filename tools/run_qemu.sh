@@ -11,29 +11,35 @@ then
     exit 1
 fi
 
-qemu_arch=$1
+vm_name=$1
 qemu_graphic=$2
 bin_dir=`readlink -f "$script_path"/../bin`
 
+qemu_prog=qemu-system-x86_64
 qemu_args=()
 qemu_args+=(-enable-kvm)
 qemu_args+=(-kernel "$bin_dir"/vmlinuz)
-qemu_args+=(-initrd "$bin_dir"/initramfs.img)
+qemu_args+=(-initrd "$bin_dir"/initramfs."$vm_name".img)
 qemu_args+=(-append 'tsc=nowatchdog console=ttyS0')
+qemu_args+=(-machine q35)
+qemu_args+=(-cpu host -smp 4)
+qemu_args+=(-m 256M)
 
-qemu_network_args=$(printf \
-    'net=%s,dhcpstart=%s,hostfwd=%s' \
-    '192.168.5.0/24' \
-    '192.168.5.11' \
-    'udp:127.0.0.1:5069-192.168.5.5:69')
-
-if [ "$qemu_arch" == 'x86_64' ]
+if [ "$vm_name" == 'main' ]
 then
-    qemu_prog=qemu-system-x86_64
-    qemu_args+=(-machine q35)
-    qemu_args+=(-cpu host -smp 4)
-    qemu_args+=(-m 256M)
-    qemu_args+=(-nic user,model=e1000,$qemu_network_args)
+    nic_args=$(printf \
+        'user,model=e1000,net=%s,dhcpstart=%s,hostfwd=%s' \
+        '192.168.5.0/24' \
+        '192.168.5.11' \
+        'udp:127.0.0.1:5069-192.168.5.11:69')
+    qemu_args+=(-nic "$nic_args")
+elif [ "$vm_name" == 'router' ]
+then
+    nic_args=$(printf \
+        'user,model=e1000,net=%s,dhcpstart=%s' \
+        '192.168.6.0/24' \
+        '192.168.6.11')
+    qemu_args+=(-nic "$nic_args")
 else
     exit 1
 fi

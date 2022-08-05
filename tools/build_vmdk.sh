@@ -6,13 +6,14 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 2 ]
+if [ $# -ne 3 ]
 then
     exit 1
 fi
 
-busybox_src_dir=`readlink -f "$1"`
-grub_src_dir=`readlink -f "$2"`
+vm_name=$1
+busybox_src_dir=`readlink -f "$2"`
+grub_src_dir=`readlink -f "$3"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings`
 vmdk_file=$bin_dir/BRLinux.vmdk
@@ -61,9 +62,9 @@ mkdir {boot,etc,opt,proc,sys}
 if [ $? -ne 0 ]; then exit 1; fi
 cp -r "$grub_src_dir"/build/_install/opt/grub opt
 if [ $? -ne 0 ]; then exit 1; fi
-cp "$bin_dir"/vmlinuz opt
+cp "$bin_dir"/vmlinuz opt/vmlinuz
 if [ $? -ne 0 ]; then exit 1; fi
-cp "$bin_dir"/initramfs.img opt
+cp "$bin_dir"/initramfs."$vm_name".img opt/initramfs.img
 if [ $? -ne 0 ]; then exit 1; fi
 echo \
 '#!/bin/sh
@@ -114,7 +115,7 @@ qemu-system-x86_64 \
     -initrd "$initramfs_file" \
     -append 'tsc=nowatchdog console=ttyS0' \
     -machine q35 \
-    -cpu host -smp 1 -m 128M \
+    -cpu host -smp 1 -m 256M \
     -drive driver=raw,file="$image_file"
 if [ $? -ne 0 ]; then exit 1; fi
 

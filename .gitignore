@@ -6,7 +6,7 @@ src/libnetfilter_conntrack-*/
 src/libnfnetlink-*/
 src/libnftnl-*/
 src/linux-*/
-bin/initramfs.img
-bin/initramfs.tmp/
+bin/initramfs.*.img
+bin/initramfs.*.tmp/
 bin/BRLinux*
 bin/vmlinuz

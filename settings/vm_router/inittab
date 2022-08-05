@@ -1,0 +1,5 @@
+::sysinit:/etc/init.d/rcS
+::askfirst:/bin/cttyhack /bin/sh
+tty2::askfirst:/bin/sh
+tty3::askfirst:/bin/sh
+tty4::askfirst:/bin/sh

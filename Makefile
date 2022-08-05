@@ -9,25 +9,26 @@ LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
-###############################################################################
-QEMU_ARCH = x86_64
 
+###############################################################################
 .PHONY: \
 default build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
 iptables-build iptables-clean \
-initramfs vmdk \
-run run-graphic
+initramfs.main run.main run-graphic.main \
+initramfs.router vmdk.router run.router \
 
-default: run
+default: run.main
 
 ###############################################################################
-build: kernel-build busybox-build grub-build iptables-build initramfs
+build: kernel-build busybox-build grub-build iptables-build initramfs.main
 
 clean: kernel-clean busybox-clean grub-clean iptables-clean
 	rm -f bin/vmlinuz
-	rm -f bin/initramfs.img
+	rm -f bin/initramfs.*.img
+	rm -rf bin/initramfs.*.tmp/
+	rm -f bin/BRLinux*
 
 ###############################################################################
 kernel-build:
@@ -154,15 +155,26 @@ iptables-clean:
 	rm -rf $(LIBMNL_SRC_DIR)/build
 
 ###############################################################################
-initramfs:
-	bash tools/build_initramfs.sh "$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
+initramfs.main:
+	bash tools/build_initramfs.sh main \
+		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
 
-vmdk:
-	bash tools/build_vmdk.sh "$(BUSYBOX_SRC_DIR)" "$(GRUB_SRC_DIR)"
+run.main:
+	bash tools/run_qemu.sh main nographic
+
+run-graphic.main:
+	bash tools/run_qemu.sh main graphic
 
 ###############################################################################
-run:
-	bash tools/run_qemu.sh $(QEMU_ARCH) nographic
+initramfs.router:
+	bash tools/build_initramfs.sh router \
+		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
 
-run-graphic:
-	bash tools/run_qemu.sh $(QEMU_ARCH) graphic
+vmdk.router:
+	bash tools/build_vmdk.sh router \
+		"$(BUSYBOX_SRC_DIR)" "$(GRUB_SRC_DIR)"
+
+run.router:
+	bash tools/run_qemu.sh router nographic
+
+###############################################################################
