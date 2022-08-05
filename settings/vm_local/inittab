@@ -1,0 +1,6 @@
+::sysinit:/etc/init.d/rcS
+::respawn:udpsvd -vE 0.0.0.0 69 tftpd -c /opt
+::askfirst:/bin/cttyhack /bin/sh
+tty2::askfirst:/bin/sh
+tty3::askfirst:/bin/sh
+tty4::askfirst:/bin/sh

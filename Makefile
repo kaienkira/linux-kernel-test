@@ -178,3 +178,9 @@ run.router:
 	bash tools/run_qemu.sh router nographic
 
 ###############################################################################
+initramfs.local:
+	bash tools/build_initramfs.sh local \
+		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
+
+run.local:
+	bash tools/run_qemu.sh local nographic
