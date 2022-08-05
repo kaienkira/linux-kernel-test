@@ -6,3 +6,14 @@ ip link set eth1 up
 
 udhcpc -b -i eth0 -s /etc/udhcpc.script
 ip addr add 192.168.100.1/24 dev eth1
+
+echo '
+interface eth1
+start 192.168.100.11
+end   192.168.100.254
+option dns 8.8.8.8
+option subnet 255.255.255.0
+option router 192.168.100.1
+option lease 864000
+' >/etc/udhcpd.conf
+udhcpd /etc/udhcpd.conf

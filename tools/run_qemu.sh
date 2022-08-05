@@ -41,13 +41,13 @@ then
         '192.168.6.11')
     qemu_args+=(-nic "$nic_args")
     nic_args=$(printf \
-        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:11:22:33:44:55' \
+        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:01' \
         'qemu0')
     qemu_args+=(-nic "$nic_args")
 elif [ "$vm_name" == 'local' ]
 then
     nic_args=$(printf \
-        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:11:22:33:44:56' \
+        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:02' \
         'qemu1')
     qemu_args+=(-nic "$nic_args")
 else
