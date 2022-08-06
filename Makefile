@@ -12,7 +12,7 @@ LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
 
 ###############################################################################
 .PHONY: \
-default build clean \
+default download build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
 iptables-build iptables-clean \
@@ -22,6 +22,9 @@ initramfs.router vmdk.router run.router \
 default: run.main
 
 ###############################################################################
+download:
+	bash tools/download_source.sh
+
 build: kernel-build busybox-build grub-build iptables-build initramfs.main
 
 clean: kernel-clean busybox-clean grub-clean iptables-clean

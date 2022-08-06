@@ -26,10 +26,15 @@ vi /etc/systemd/network/91-qemu1.netdev
     User=
     Group=
 
+vi /etc/systemd/network/92-brqemu.network
+    [Match]
+    Name=brqemu*
+
 vi /etc/systemd/network/92-qemu.network
     [Match]
     Name=qemu*
 
     [Network]
     Bridge=brqemu0
+
 ```
