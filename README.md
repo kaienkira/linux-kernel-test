@@ -1,9 +1,9 @@
 # linux-kernel-test
 
 ```
-pacman -S base-devel bc qemu-full rsync
+pacman -S base-devel bc qemu-full curl rsync cpio
 
-vi /etc/systemd/network/90-qemubr0.netdev
+vi /etc/systemd/network/90-brqemu0.netdev
     [NetDev]
     Name=brqemu0
     Kind=bridge
