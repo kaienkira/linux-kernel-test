@@ -25,7 +25,9 @@ default: run.main
 download:
 	bash tools/download_source.sh
 
-build: kernel-build busybox-build grub-build iptables-build initramfs.main
+build: kernel-build busybox-build grub-build iptables-build \
+       initramfs.main initramfs.router initramfs.local \
+       vmdk.router
 
 clean: kernel-clean busybox-clean grub-clean iptables-clean
 	rm -f bin/vmlinuz
