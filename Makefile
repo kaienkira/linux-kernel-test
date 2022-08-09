@@ -8,7 +8,6 @@ LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
-IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
 NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.4)
 
 ###############################################################################
@@ -16,7 +15,7 @@ NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.4)
 default download build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
-netfilter-build netfilter-clean \
+nftables-build nftables-clean \
 initramfs.main run.main run-graphic.main \
 initramfs.router vmdk.router run.router \
 
@@ -26,11 +25,11 @@ default: run.main
 download:
 	bash tools/download_source.sh
 
-build: kernel-build busybox-build grub-build netfilter-build \
+build: kernel-build busybox-build grub-build nftables-build \
        initramfs.main initramfs.router initramfs.local \
        vmdk.router
 
-clean: kernel-clean busybox-clean grub-clean netfilter-clean
+clean: kernel-clean busybox-clean grub-clean nftables-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.*.img
 	rm -rf bin/initramfs.*.tmp/
@@ -85,7 +84,7 @@ grub-clean:
 	rm -rf $(GRUB_SRC_DIR)/build
 
 ###############################################################################
-netfilter-build:
+nftables-build:
 	cd $(LIBMNL_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
@@ -131,27 +130,6 @@ netfilter-build:
 			--disable-shared && \
 		make -j4 && \
 		make DESTDIR=`readlink -f _install` install
-	cd $(IPTABLES_SRC_DIR) && \
-		mkdir -p build && \
-		cd build && \
-		mkdir -p _install && \
-		../configure \
-			CFLAGS="-I$(IPTABLES_SRC_DIR) \
-                    -I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
-                    -I$(LIBMNL_SRC_DIR)/build/_install/include \
-                    -I$(LIBNFTNL_SRC_DIR)/build/_install/include \
-                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include \
-                    -I$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/include" \
-			LDFLAGS="--static \
-                     -L$(LIBMNL_SRC_DIR)/build/_install/lib \
-                     -L$(LIBNFTNL_SRC_DIR)/build/_install/lib \
-                     -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib \
-                     -L$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/lib" \
-			--prefix=/ \
-			--enable-static \
-			--disable-shared && \
-		make -j4 && \
-		make DESTDIR=`readlink -f _install` install
 	cd $(NFTABLES_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
@@ -176,19 +154,17 @@ netfilter-build:
 		make -j4 && \
 		make DESTDIR=`readlink -f _install` install
 
-netfilter-clean:
+nftables-clean:
 	rm -rf $(LIBMNL_SRC_DIR)/build
 	rm -rf $(LIBNFTNL_SRC_DIR)/build
 	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
 	rm -rf $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
-	rm -rf $(IPTABLES_SRC_DIR)/build
 	rm -rf $(NFTABLES_SRC_DIR)/build
 
 ###############################################################################
 initramfs.main:
 	bash tools/build_initramfs.sh main \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(IPTABLES_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)"
 
 run.main:
@@ -201,7 +177,6 @@ run-graphic.main:
 initramfs.router:
 	bash tools/build_initramfs.sh router \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(IPTABLES_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)"
 
 vmdk.router:
@@ -215,7 +190,6 @@ run.router:
 initramfs.local:
 	bash tools/build_initramfs.sh local \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(IPTABLES_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)"
 
 run.local:

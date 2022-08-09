@@ -19,4 +19,13 @@ option lease 864000
 udhcpd /etc/udhcpd.conf
 
 echo 1 >/proc/sys/net/ipv4/ip_forward
-iptables -t nat -A POSTROUTING -o eth0 -s 192.168.100.0/24 -j MASQUERADE
+echo '
+flush ruleset
+
+table ip nat {
+    chain postrouting {
+        type nat hook postrouting priority 100; policy accept;
+        ip saddr 192.168.100.0/24 oif "eth0" masquerade
+    }
+}
+' | nft -f -
