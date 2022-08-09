@@ -4,18 +4,19 @@ BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
 GRUB_SRC_DIR = $(abspath src/grub-2.06)
 ###############################################################################
-IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
 LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
+IPTABLES_SRC_DIR = $(abspath src/iptables-1.8.8)
+NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.4)
 
 ###############################################################################
 .PHONY: \
 default download build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
-iptables-build iptables-clean \
+netfilter-build netfilter-clean \
 initramfs.main run.main run-graphic.main \
 initramfs.router vmdk.router run.router \
 
@@ -25,11 +26,11 @@ default: run.main
 download:
 	bash tools/download_source.sh
 
-build: kernel-build busybox-build grub-build iptables-build \
+build: kernel-build busybox-build grub-build netfilter-build \
        initramfs.main initramfs.router initramfs.local \
        vmdk.router
 
-clean: kernel-clean busybox-clean grub-clean iptables-clean
+clean: kernel-clean busybox-clean grub-clean netfilter-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.*.img
 	rm -rf bin/initramfs.*.tmp/
@@ -84,7 +85,7 @@ grub-clean:
 	rm -rf $(GRUB_SRC_DIR)/build
 
 ###############################################################################
-iptables-build:
+netfilter-build:
 	cd $(LIBMNL_SRC_DIR) && \
 		mkdir -p build && \
 		cd build && \
@@ -151,18 +152,44 @@ iptables-build:
 			--disable-shared && \
 		make -j4 && \
 		make DESTDIR=`readlink -f _install` install
+	cd $(NFTABLES_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			CFLAGS="-I$(NFTABLES_SRC_DIR) \
+                    -I$(LINUX_KERNEL_SRC_DIR)/build/_install/include \
+                    -I$(LIBMNL_SRC_DIR)/build/_install/include \
+                    -I$(LIBNFTNL_SRC_DIR)/build/_install/include \
+                    -I$(LIBNFNETLINK_SRC_DIR)/build/_install/include \
+                    -I$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/include" \
+			LDFLAGS="--static \
+                     -L$(LIBMNL_SRC_DIR)/build/_install/lib \
+                     -L$(LIBNFTNL_SRC_DIR)/build/_install/lib \
+                     -L$(LIBNFNETLINK_SRC_DIR)/build/_install/lib \
+                     -L$(LIBNETFILTER_CONNTRACK_SRC_DIR)/build/_install/lib" \
+			--prefix=/ \
+			--with-mini-gmp \
+			--without-cli \
+			--enable-static \
+			--disable-shared && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
 
-iptables-clean:
-	rm -rf $(IPTABLES_SRC_DIR)/build
-	rm -rf $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
-	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
-	rm -rf $(LIBNFTNL_SRC_DIR)/build
+netfilter-clean:
 	rm -rf $(LIBMNL_SRC_DIR)/build
+	rm -rf $(LIBNFTNL_SRC_DIR)/build
+	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
+	rm -rf $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
+	rm -rf $(IPTABLES_SRC_DIR)/build
+	rm -rf $(NFTABLES_SRC_DIR)/build
 
 ###############################################################################
 initramfs.main:
 	bash tools/build_initramfs.sh main \
-		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
+		"$(BUSYBOX_SRC_DIR)" \
+		"$(IPTABLES_SRC_DIR)" \
+		"$(NFTABLES_SRC_DIR)"
 
 run.main:
 	bash tools/run_qemu.sh main nographic
@@ -173,7 +200,9 @@ run-graphic.main:
 ###############################################################################
 initramfs.router:
 	bash tools/build_initramfs.sh router \
-		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
+		"$(BUSYBOX_SRC_DIR)" \
+		"$(IPTABLES_SRC_DIR)" \
+		"$(NFTABLES_SRC_DIR)"
 
 vmdk.router:
 	bash tools/build_vmdk.sh router \
@@ -185,7 +214,9 @@ run.router:
 ###############################################################################
 initramfs.local:
 	bash tools/build_initramfs.sh local \
-		"$(BUSYBOX_SRC_DIR)" "$(IPTABLES_SRC_DIR)"
+		"$(BUSYBOX_SRC_DIR)" \
+		"$(IPTABLES_SRC_DIR)" \
+		"$(NFTABLES_SRC_DIR)"
 
 run.local:
 	bash tools/run_qemu.sh local nographic

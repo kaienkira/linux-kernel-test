@@ -6,7 +6,7 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 3 ]
+if [ $# -ne 4 ]
 then
     exit 1
 fi
@@ -14,6 +14,7 @@ fi
 vm_name=$1
 busybox_src_dir=`readlink -f "$2"`
 iptables_src_dir=`readlink -f "$3"`
+nftables_src_dir=`readlink -f "$4"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings/vm_$vm_name`
 initramfs_tmp_dir=$bin_dir/initramfs.$vm_name.tmp
@@ -53,7 +54,10 @@ if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
+if [ $? -ne 0 ]; then exit 1; fi
 cp -P "$iptables_src_dir"/build/_install/sbin/* sbin/
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$nftables_src_dir"/build/_install/sbin/* sbin/
 if [ $? -ne 0 ]; then exit 1; fi
 
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
