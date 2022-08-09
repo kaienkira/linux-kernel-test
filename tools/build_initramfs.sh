@@ -29,7 +29,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 mkdir "$initramfs_tmp_dir"
 if [ $? -ne 0 ]; then exit 1; fi
 
-cp -r "$busybox_src_dir"/build/_install "$initramfs_tmp_dir"
+cp -Pr "$busybox_src_dir"/build/_install "$initramfs_tmp_dir"
 if [ $? -ne 0 ]; then exit 1; fi
 
 cd "$initramfs_tmp_dir"/_install
@@ -53,7 +53,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
-cp "$iptables_src_dir"/build/_install/sbin/* sbin/
+cp -P "$iptables_src_dir"/build/_install/sbin/* sbin/
 if [ $? -ne 0 ]; then exit 1; fi
 
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
