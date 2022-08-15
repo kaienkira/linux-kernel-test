@@ -1,14 +1,18 @@
 LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc1)
 LINUX_KERNEL_ENV = O=build ARCH=x86
+
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
+
 GRUB_SRC_DIR = $(abspath src/grub-2.06)
-###############################################################################
+
 LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
 NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.4)
+
+IPERF_SRC_DIR = $(abspath src/iperf-3.11)
 
 ###############################################################################
 .PHONY: \
@@ -16,8 +20,11 @@ default download build clean \
 kernel-build kernel-clean \
 busybox-build busybox-clean \
 nftables-build nftables-clean \
+iperf-build iperf-clean \
+initramfs \
 initramfs.main run.main run-graphic.main \
 initramfs.router vmdk.router run.router \
+initramfs.local run.local \
 
 default: run.main
 
@@ -25,15 +32,18 @@ default: run.main
 download:
 	bash tools/download_source.sh
 
-build: kernel-build busybox-build grub-build nftables-build \
-       initramfs.main initramfs.router initramfs.local \
-       vmdk.router
+build: kernel-build busybox-build grub-build \
+       nftables-build iperf-build \
+	   initramfs vmdk.router
 
-clean: kernel-clean busybox-clean grub-clean nftables-clean
+clean: kernel-clean busybox-clean grub-clean \
+       nftables-cleani iperf-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.*.img
 	rm -rf bin/initramfs.*.tmp/
 	rm -f bin/BRLinux*
+
+initramfs: initramfs.main initramfs.router initramfs.local
 
 ###############################################################################
 kernel-build:
@@ -162,10 +172,28 @@ nftables-clean:
 	rm -rf $(NFTABLES_SRC_DIR)/build
 
 ###############################################################################
+iperf-build:
+	cd $(IPERF_SRC_DIR) && \
+		mkdir -p build && \
+		cd build && \
+		mkdir -p _install && \
+		../configure \
+			--prefix=/ \
+			--enable-static-bin \
+			--without-sctp \
+			--without-openssl && \
+		make -j4 && \
+		make DESTDIR=`readlink -f _install` install
+
+iperf-clean:
+	rm -rf $(IPERF_SRC_DIR)/build
+
+###############################################################################
 initramfs.main:
 	bash tools/build_initramfs.sh main \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(NFTABLES_SRC_DIR)"
+		"$(NFTABLES_SRC_DIR)" \
+		"$(IPERF_SRC_DIR)"
 
 run.main:
 	bash tools/run_qemu.sh main nographic
@@ -177,7 +205,8 @@ run-graphic.main:
 initramfs.router:
 	bash tools/build_initramfs.sh router \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(NFTABLES_SRC_DIR)"
+		"$(NFTABLES_SRC_DIR)" \
+		"$(IPERF_SRC_DIR)"
 
 vmdk.router:
 	bash tools/build_vmdk.sh router \
@@ -190,7 +219,8 @@ run.router:
 initramfs.local:
 	bash tools/build_initramfs.sh local \
 		"$(BUSYBOX_SRC_DIR)" \
-		"$(NFTABLES_SRC_DIR)"
+		"$(NFTABLES_SRC_DIR)" \
+		"$(IPERF_SRC_DIR)"
 
 run.local:
 	bash tools/run_qemu.sh local nographic

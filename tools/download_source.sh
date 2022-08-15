@@ -14,11 +14,17 @@ if [ $? -ne 0 ]; then exit 1; fi
 download_file()
 {
     local url=$1
+    local rename_file=$2
 
     echo "start download $url"
 
-    curl -O "$url"
-    if [ $? -ne 0 ]; then exit 1; fi
+    if [ ! -z "$rename_file" ]
+    then
+        curl -L -o "$rename_file" "$url"
+    else
+        curl -L -O "$url"
+        if [ $? -ne 0 ]; then exit 1; fi
+    fi
 }
 
 download_file 'https://git.kernel.org/torvalds/t/linux-6.0-rc1.tar.gz'
@@ -29,5 +35,6 @@ download_file 'https://www.netfilter.org/projects/libmnl/files/libmnl-1.0.5.tar.
 download_file 'https://www.netfilter.org/projects/libnftnl/files/libnftnl-1.2.2.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libnfnetlink/files/libnfnetlink-1.0.2.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libnetfilter_conntrack/files/libnetfilter_conntrack-1.0.9.tar.bz2'
+download_file 'https://github.com/esnet/iperf/archive/refs/tags/3.11.tar.gz' 'iperf-3.11.tar.gz'
 
 exit 0

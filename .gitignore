@@ -4,6 +4,7 @@ bin/initramfs.*.tmp/
 bin/vmlinuz
 src/busybox-*
 src/grub-*
+src/iperf-*
 src/iptables-*
 src/libmnl-*
 src/libnetfilter_conntrack-*
