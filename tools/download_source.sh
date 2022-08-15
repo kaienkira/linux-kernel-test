@@ -21,7 +21,6 @@ download_file()
     if [ $? -ne 0 ]; then exit 1; fi
 }
 
-#download_file 'https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.1.tar.xz'
 download_file 'https://git.kernel.org/torvalds/t/linux-6.0-rc1.tar.gz'
 download_file 'https://busybox.net/downloads/busybox-1.35.0.tar.bz2'
 download_file 'https://ftp.gnu.org/gnu/grub/grub-2.06.tar.xz'
