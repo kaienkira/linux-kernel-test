@@ -1,4 +1,4 @@
-LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc1)
+LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc2)
 LINUX_KERNEL_ENV = O=build ARCH=x86
 
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
@@ -37,7 +37,7 @@ build: kernel-build busybox-build grub-build \
 	   initramfs vmdk.router
 
 clean: kernel-clean busybox-clean grub-clean \
-       nftables-cleani iperf-clean
+       nftables-clean iperf-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.*.img
 	rm -rf bin/initramfs.*.tmp/
