@@ -1,4 +1,4 @@
-LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc2)
+LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc3)
 LINUX_KERNEL_ENV = O=build ARCH=x86
 
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
