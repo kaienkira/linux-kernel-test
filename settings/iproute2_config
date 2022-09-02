@@ -6,7 +6,7 @@ IP_CONFIG_SETNS:=y
 CFLAGS += -DHAVE_SETNS
 CFLAGS += -DHAVE_HANDLE_AT
 CFLAGS += -DNEED_STRLCPY
-LDFLAGS += --static
+LDFLAGS = --static
 
 %.o: %.c 
 	$(QUIET_CC)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(CPPFLAGS) -c -o $@ $<
