@@ -58,9 +58,7 @@ cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
 if [ $? -ne 0 ]; then exit 1; fi
 cp -P "$nftables_src_dir"/build/_install/sbin/* sbin/
 if [ $? -ne 0 ]; then exit 1; fi
-rm -f sbin/tc 
-if [ $? -ne 0 ]; then exit 1; fi
-cp -P "$iproute2_src_dir"/tc/tc sbin/tc
+cp -P "$iproute2_src_dir"/tc/tc sbin/tc_iproute2
 if [ $? -ne 0 ]; then exit 1; fi
 cp -P "$iperf_src_dir"/build/_install/bin/* bin/
 if [ $? -ne 0 ]; then exit 1; fi
