@@ -1,17 +1,14 @@
 LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.0-rc3)
 LINUX_KERNEL_ENV = O=build ARCH=x86
-
 BUSYBOX_SRC_DIR = $(abspath src/busybox-1.35.0)
 BUSYBOX_ENV = O=build ARCH=x86
-
 GRUB_SRC_DIR = $(abspath src/grub-2.06)
-
 LIBMNL_SRC_DIR = $(abspath src/libmnl-1.0.5)
 LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.2)
 LIBNFNETLINK_SRC_DIR = $(abspath src/libnfnetlink-1.0.2)
 LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
 NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.4)
-
+IPROUTE2_SRC_DIR = $(abspath src/iproute2-5.19.0)
 IPERF_SRC_DIR = $(abspath src/iperf-3.11)
 
 ###############################################################################
@@ -21,6 +18,7 @@ kernel-build kernel-clean \
 busybox-build busybox-clean \
 nftables-build nftables-clean \
 iperf-build iperf-clean \
+iproute2-build iproute2-clean \
 initramfs \
 initramfs.main run.main run-graphic.main \
 initramfs.router vmdk.router run.router \
@@ -33,11 +31,11 @@ download:
 	bash tools/download_source.sh
 
 build: kernel-build busybox-build grub-build \
-       nftables-build iperf-build \
+       nftables-build iproute2-build iperf-build \
 	   initramfs vmdk.router
 
 clean: kernel-clean busybox-clean grub-clean \
-       nftables-clean iperf-clean
+       nftables-clean iproute2-clean iperf-clean
 	rm -f bin/vmlinuz
 	rm -f bin/initramfs.*.img
 	rm -rf bin/initramfs.*.tmp/
@@ -172,6 +170,14 @@ nftables-clean:
 	rm -rf $(NFTABLES_SRC_DIR)/build
 
 ###############################################################################
+iproute2-build:
+	cp settings/iproute2_config $(IPROUTE2_SRC_DIR)/config.mk
+	cd $(IPROUTE2_SRC_DIR) && make -j4
+
+iproute2-clean:
+	cd $(IPROUTE2_SRC_DIR) && make distclean && rm -f config.mk
+
+###############################################################################
 iperf-build:
 	cd $(IPERF_SRC_DIR) && \
 		mkdir -p build && \
@@ -193,6 +199,7 @@ initramfs.main:
 	bash tools/build_initramfs.sh main \
 		"$(BUSYBOX_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)" \
+		"$(IPROUTE2_SRC_DIR)" \
 		"$(IPERF_SRC_DIR)"
 
 run.main:
@@ -206,6 +213,7 @@ initramfs.router:
 	bash tools/build_initramfs.sh router \
 		"$(BUSYBOX_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)" \
+		"$(IPROUTE2_SRC_DIR)" \
 		"$(IPERF_SRC_DIR)"
 
 vmdk.router:
@@ -220,6 +228,7 @@ initramfs.local:
 	bash tools/build_initramfs.sh local \
 		"$(BUSYBOX_SRC_DIR)" \
 		"$(NFTABLES_SRC_DIR)" \
+		"$(IPROUTE2_SRC_DIR)" \
 		"$(IPERF_SRC_DIR)"
 
 run.local:

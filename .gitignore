@@ -5,6 +5,7 @@ bin/vmlinuz
 src/busybox-*
 src/grub-*
 src/iperf-*
+src/iproute2-*
 src/iptables-*
 src/libmnl-*
 src/libnetfilter_conntrack-*

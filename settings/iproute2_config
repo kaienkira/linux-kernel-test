@@ -1,0 +1,12 @@
+AR:=ar
+CC:=gcc
+YACC:=bison
+TC_CONFIG_NO_XT:=y
+IP_CONFIG_SETNS:=y
+CFLAGS += -DHAVE_SETNS
+CFLAGS += -DHAVE_HANDLE_AT
+CFLAGS += -DNEED_STRLCPY
+LDFLAGS += --static
+
+%.o: %.c 
+	$(QUIET_CC)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(CPPFLAGS) -c -o $@ $<

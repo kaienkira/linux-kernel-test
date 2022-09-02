@@ -6,7 +6,7 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 4 ]
+if [ $# -ne 5 ]
 then
     exit 1
 fi
@@ -14,7 +14,8 @@ fi
 vm_name=$1
 busybox_src_dir=`readlink -f "$2"`
 nftables_src_dir=`readlink -f "$3"`
-iperf_src_dir=`readlink -f "$4"`
+iproute2_src_dir=`readlink -f "$4"`
+iperf_src_dir=`readlink -f "$5"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings/vm_$vm_name`
 initramfs_tmp_dir=$bin_dir/initramfs.$vm_name.tmp
@@ -56,6 +57,10 @@ if [ $? -ne 0 ]; then exit 1; fi
 cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
 if [ $? -ne 0 ]; then exit 1; fi
 cp -P "$nftables_src_dir"/build/_install/sbin/* sbin/
+if [ $? -ne 0 ]; then exit 1; fi
+rm -f sbin/tc 
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$iproute2_src_dir"/tc/tc sbin/tc
 if [ $? -ne 0 ]; then exit 1; fi
 cp -P "$iperf_src_dir"/build/_install/bin/* bin/
 if [ $? -ne 0 ]; then exit 1; fi
