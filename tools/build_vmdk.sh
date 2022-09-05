@@ -12,7 +12,7 @@ then
 fi
 
 vm_name=$1
-busybox_src_dir=`readlink -f "$2"`
+install_dir=`readlink -f "$2"`
 grub_src_dir=`readlink -f "$3"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings`
@@ -51,15 +51,21 @@ if [ $? -ne 0 ]; then exit 1; fi
 mkdir "$initramfs_tmp_dir"
 if [ $? -ne 0 ]; then exit 1; fi
 
-cp -r "$busybox_src_dir"/build/_install "$initramfs_tmp_dir"
+cd "$initramfs_tmp_dir"/
+if [ $? -ne 0 ]; then exit 1; fi
+mkdir {bin,sbin,lib,etc,opt,proc,sys,tmp,boot}
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/bin/* bin/
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/sbin/* sbin/
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/lib/* lib/
+if [ $? -ne 0 ]; then exit 1; fi
+ln -s lib lib64
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/etc/* etc/
 if [ $? -ne 0 ]; then exit 1; fi
 
-cd "$initramfs_tmp_dir"/_install
-if [ $? -ne 0 ]; then exit 1; fi
-rm -f linuxrc
-if [ $? -ne 0 ]; then exit 1; fi
-mkdir {boot,etc,opt,proc,sys}
-if [ $? -ne 0 ]; then exit 1; fi
 cp -r "$grub_src_dir"/build/_install/opt/grub opt
 if [ $? -ne 0 ]; then exit 1; fi
 cp "$bin_dir"/vmlinuz opt/vmlinuz

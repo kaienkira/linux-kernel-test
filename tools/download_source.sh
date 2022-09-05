@@ -27,7 +27,7 @@ download_file()
     fi
 }
 
-download_file 'https://git.kernel.org/torvalds/t/linux-6.0-rc2.tar.gz'
+download_file 'https://git.kernel.org/torvalds/t/linux-6.0-rc4.tar.gz'
 download_file 'https://busybox.net/downloads/busybox-1.35.0.tar.bz2'
 download_file 'https://ftp.gnu.org/gnu/grub/grub-2.06.tar.xz'
 download_file 'https://www.netfilter.org/projects/nftables/files/nftables-1.0.4.tar.bz2'

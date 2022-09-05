@@ -2,7 +2,9 @@ bin/BRLinux*
 bin/initramfs.*.img
 bin/initramfs.*.tmp/
 bin/vmlinuz
+src/_install
 src/busybox-*
+src/glibc-*
 src/grub-*
 src/iperf-*
 src/iproute2-*

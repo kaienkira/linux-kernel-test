@@ -6,16 +6,13 @@ script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
 script_path=`dirname "$script_abs_name"`
 
-if [ $# -ne 5 ]
+if [ $# -ne 2 ]
 then
     exit 1
 fi
 
 vm_name=$1
-busybox_src_dir=`readlink -f "$2"`
-nftables_src_dir=`readlink -f "$3"`
-iproute2_src_dir=`readlink -f "$4"`
-iperf_src_dir=`readlink -f "$5"`
+install_dir=`readlink -f "$2"`
 bin_dir=`readlink -f "$script_path"/../bin`
 settings_dir=`readlink -f "$script_path"/../settings/vm_$vm_name`
 initramfs_tmp_dir=$bin_dir/initramfs.$vm_name.tmp
@@ -31,15 +28,21 @@ if [ $? -ne 0 ]; then exit 1; fi
 mkdir "$initramfs_tmp_dir"
 if [ $? -ne 0 ]; then exit 1; fi
 
-cp -Pr "$busybox_src_dir"/build/_install "$initramfs_tmp_dir"
+cd "$initramfs_tmp_dir"/
+if [ $? -ne 0 ]; then exit 1; fi
+mkdir {bin,sbin,lib,etc,opt,proc,run,sys,tmp}
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/bin/* bin/
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/sbin/* sbin/
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/lib/* lib/
+if [ $? -ne 0 ]; then exit 1; fi
+ln -s lib lib64
+if [ $? -ne 0 ]; then exit 1; fi
+cp -P "$install_dir"/etc/* etc/
 if [ $? -ne 0 ]; then exit 1; fi
 
-cd "$initramfs_tmp_dir"/_install
-if [ $? -ne 0 ]; then exit 1; fi
-rm -f linuxrc
-if [ $? -ne 0 ]; then exit 1; fi
-mkdir {etc,opt,proc,run,sys,tmp}
-if [ $? -ne 0 ]; then exit 1; fi
 mkdir etc/init.d
 if [ $? -ne 0 ]; then exit 1; fi
 cp "$settings_dir"/init init
@@ -53,14 +56,6 @@ if [ $? -ne 0 ]; then exit 1; fi
 cp "$settings_dir"/rcS etc/init.d/rcS
 if [ $? -ne 0 ]; then exit 1; fi
 chmod +x etc/init.d/rcS
-if [ $? -ne 0 ]; then exit 1; fi
-cp "$busybox_src_dir"/examples/udhcp/simple.script etc/udhcpc.script
-if [ $? -ne 0 ]; then exit 1; fi
-cp -P "$nftables_src_dir"/build/_install/sbin/* sbin/
-if [ $? -ne 0 ]; then exit 1; fi
-cp -P "$iproute2_src_dir"/tc/tc sbin/tc_iproute2
-if [ $? -ne 0 ]; then exit 1; fi
-cp -P "$iperf_src_dir"/build/_install/bin/* bin/
 if [ $? -ne 0 ]; then exit 1; fi
 
 find . -print0 | cpio --null -o --format=newc -R +0:+0 |
