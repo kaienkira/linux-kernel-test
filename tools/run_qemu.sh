@@ -23,7 +23,7 @@ qemu_args+=(-initrd "$bin_dir"/initramfs."$vm_name".img)
 qemu_args+=(-append 'tsc=nowatchdog console=ttyS0')
 qemu_args+=(-machine q35)
 qemu_args+=(-cpu host -smp 4)
-qemu_args+=(-m 256M)
+qemu_args+=(-m 512M)
 
 if [ "$vm_name" == 'main' ]
 then
