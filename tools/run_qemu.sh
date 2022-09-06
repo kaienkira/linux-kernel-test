@@ -28,7 +28,7 @@ qemu_args+=(-m 256M)
 if [ "$vm_name" == 'main' ]
 then
     nic_args=$(printf \
-        'user,model=e1000,net=%s,dhcpstart=%s,hostfwd=%s' \
+        'user,model=virtio,net=%s,dhcpstart=%s,hostfwd=%s' \
         '192.168.5.0/24' \
         '192.168.5.11' \
         'udp:127.0.0.1:5069-192.168.5.11:69')
@@ -36,18 +36,18 @@ then
 elif [ "$vm_name" == 'router' ]
 then
     nic_args=$(printf \
-        'user,model=e1000,net=%s,dhcpstart=%s' \
+        'user,model=virtio,net=%s,dhcpstart=%s' \
         '192.168.6.0/24' \
         '192.168.6.11')
     qemu_args+=(-nic "$nic_args")
     nic_args=$(printf \
-        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:01' \
+        'tap,model=virtio,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:01' \
         'qemu0')
     qemu_args+=(-nic "$nic_args")
 elif [ "$vm_name" == 'local' ]
 then
     nic_args=$(printf \
-        'tap,model=e1000,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:02' \
+        'tap,model=virtio,ifname=%s,script=no,downscript=no,mac=00:cd:ef:00:00:02' \
         'qemu1')
     qemu_args+=(-nic "$nic_args")
 else
