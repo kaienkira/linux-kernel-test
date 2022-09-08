@@ -8,6 +8,7 @@ build \
 clean \
 create_install_dir \
 clean_install_dir \
+strip \
 reinstall \
 initramfs \
 initramfs.main \
@@ -36,6 +37,7 @@ nftables-build \
 iproute2-build \
 iperf-build \
 grub-build \
+strip \
 initramfs \
 vmdk.router
 
@@ -64,6 +66,11 @@ create_install_dir:
 clean_install_dir:
 	rm -rf $(INSTALL_DIR)
 
+strip:
+	find $(INSTALL_DIR)/bin -type f -exec strip {} \;
+	find $(INSTALL_DIR)/sbin -type f -exec strip {} \;
+	find $(INSTALL_DIR)/lib -type f -exec strip {} \;
+
 reinstall: \
 clean_install_dir \
 create_install_dir \
@@ -76,7 +83,8 @@ libnfnetlink-install \
 libnetfilter_conntrack-install \
 nftables-install \
 iproute2-install \
-iperf-install
+iperf-install \
+strip
 
 initramfs: initramfs.main initramfs.router initramfs.local
 
