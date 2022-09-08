@@ -4,6 +4,7 @@ bin/initramfs.*.tmp/
 bin/vmlinuz
 src/_install
 src/busybox-*
+src/dropbear-*
 src/glibc-*
 src/grub-*
 src/iperf-*

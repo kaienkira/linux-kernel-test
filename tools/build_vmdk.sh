@@ -92,6 +92,7 @@ mount /dev/sda1 /boot
 cp /opt/vmlinuz /boot
 cp /opt/initramfs.img /boot
 echo "
+set timeout=5
 insmod part_msdos
 insmod ext2
 menuentry BRLinux {

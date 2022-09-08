@@ -37,5 +37,6 @@ download_file 'https://www.netfilter.org/projects/libnfnetlink/files/libnfnetlin
 download_file 'https://www.netfilter.org/projects/libnetfilter_conntrack/files/libnetfilter_conntrack-1.0.9.tar.bz2'
 download_file 'https://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.19.0.tar.xz'
 download_file 'https://github.com/esnet/iperf/archive/refs/tags/3.11.tar.gz' 'iperf-3.11.tar.gz'
+download_file 'https://matt.ucc.asn.au/dropbear/releases/dropbear-2022.82.tar.bz2'
 
 exit 0

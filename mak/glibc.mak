@@ -20,8 +20,9 @@ glibc-compile:
 			--with-headers=$(INSTALL_DIR)/include \
 			--enable-kernel=5.15 \
 			--disable-profile \
-			--disable-crypt \
 			--disable-timezone-tools \
+			--disable-build-nscd \
+			--disable-nscd \
 			--without-gd \
 			--without-selinux && \
 		make -j$(NPROC) && \
@@ -39,3 +40,10 @@ glibc-install:
 		$(INSTALL_DIR)/lib/
 	cp -P $(GLIBC_SRC_DIR)/build/_install/lib64/libresolv.so.2 \
 		$(INSTALL_DIR)/lib/
+	cp -P $(GLIBC_SRC_DIR)/build/_install/lib64/libcrypt.so.1 \
+		$(INSTALL_DIR)/lib/
+	cd $(INSTALL_DIR)/lib && \
+		ln -s libc.so.6 libc.so && \
+		ln -s libm.so.6 libm.so && \
+		ln -s libresolv.so.2 libresolv.so && \
+		ln -s libcrypt.so.1 libcrypt.so
