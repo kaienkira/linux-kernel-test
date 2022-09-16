@@ -24,8 +24,15 @@ flush ruleset
 
 table ip nat {
     chain postrouting {
-        type nat hook postrouting priority 100; policy accept;
+        type nat hook postrouting priority srcnat; policy accept;
         ip saddr 192.168.100.0/24 oif "eth0" masquerade
+    }
+}
+
+table ip filter {
+    chain input {
+        type filter hook input priority filter; policy drop;
+        ct state vmap { established: accept, related: accept, invalid: drop }
     }
 }
 ' | nft -f -
