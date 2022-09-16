@@ -33,6 +33,13 @@ table ip filter {
     chain input {
         type filter hook input priority filter; policy drop;
         ct state vmap { established: accept, related: accept, invalid: drop }
+        iifname vmap { lo: accept, eth0: jump input_eth0, eth1: jump input_eth1 }
+    }
+    chain input_eth0 {
+        drop
+    }
+    chain input_eth1 {
+        accept
     }
 }
 ' | nft -f -
