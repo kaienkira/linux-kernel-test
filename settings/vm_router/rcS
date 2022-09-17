@@ -27,6 +27,14 @@ table ip nat {
         type nat hook postrouting priority srcnat; policy accept;
         ip saddr 192.168.100.0/24 oif "eth0" masquerade
     }
+
+    flowtable f {
+        hook ingress priority 0; devices = { eth0, eth1 };
+    }
+    chain nat_offload {
+        type filter hook forward priority filter; policy accept;
+        ip protocol { tcp, udp } flow offload @f
+    }
 }
 
 table inet filter {
@@ -35,11 +43,14 @@ table inet filter {
         ct state vmap { established: accept, related: accept, invalid: drop }
         iifname vmap { lo: accept, eth0: jump input_eth0, eth1: jump input_eth1 }
     }
+
     chain input_eth0 {
         drop
     }
+
     chain input_eth1 {
         accept
     }
 }
+
 ' | nft -f -
