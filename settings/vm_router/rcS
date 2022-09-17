@@ -29,7 +29,7 @@ table ip nat {
     }
 }
 
-table ip filter {
+table inet filter {
     chain input {
         type filter hook input priority filter; policy drop;
         ct state vmap { established: accept, related: accept, invalid: drop }
