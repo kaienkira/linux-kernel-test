@@ -27,7 +27,7 @@ download_file()
     fi
 }
 
-download_file 'https://git.kernel.org/torvalds/t/linux-6.1-rc2.tar.gz'
+download_file 'https://git.kernel.org/torvalds/t/linux-6.1-rc3.tar.gz'
 download_file 'http://ftp.gnu.org/gnu/glibc/glibc-2.36.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.35.0.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libmnl/files/libmnl-1.0.5.tar.bz2'
