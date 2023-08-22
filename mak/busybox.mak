@@ -1,4 +1,4 @@
-BUSYBOX_SRC_DIR = $(abspath src/busybox-1.36.0)
+BUSYBOX_SRC_DIR = $(abspath src/busybox-1.36.1)
 BUSYBOX_ENV = O=build ARCH=x86
 
 .PHONY: \

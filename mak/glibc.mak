@@ -1,4 +1,4 @@
-GLIBC_SRC_DIR = $(abspath src/glibc-2.37)
+GLIBC_SRC_DIR = $(abspath src/glibc-2.38)
 
 .PHONY: \
 glibc-build \
@@ -18,7 +18,7 @@ glibc-compile:
 		    CFLAGS='-O2' \
 			--prefix=/usr \
 			--with-headers=$(INSTALL_DIR)/include \
-			--enable-kernel=5.15 \
+			--enable-kernel=6.4 \
 			--disable-profile \
 			--disable-timezone-tools \
 			--disable-build-nscd \
@@ -40,10 +40,7 @@ glibc-install:
 		$(INSTALL_DIR)/lib/
 	cp -P $(GLIBC_SRC_DIR)/build/_install/lib64/libresolv.so.2 \
 		$(INSTALL_DIR)/lib/
-	cp -P $(GLIBC_SRC_DIR)/build/_install/lib64/libcrypt.so.1 \
-		$(INSTALL_DIR)/lib/
 	cd $(INSTALL_DIR)/lib && \
-		ln -s libc.so.6 libc.so && \
-		ln -s libm.so.6 libm.so && \
-		ln -s libresolv.so.2 libresolv.so && \
-		ln -s libcrypt.so.1 libcrypt.so
+		ln -sf libc.so.6 libc.so && \
+		ln -sf libm.so.6 libm.so && \
+		ln -sf libresolv.so.2 libresolv.so

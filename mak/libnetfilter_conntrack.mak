@@ -14,7 +14,7 @@ libnetfilter_conntrack-clean:
 	rm -rf $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
 
 libnetfilter_conntrack-compile:
-	mkdir $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
+	mkdir -p $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build
 	cd $(LIBNETFILTER_CONNTRACK_SRC_DIR)/build && \
 		../configure \
 			CFLAGS="-O2 -I$(INSTALL_DIR)/include" \
