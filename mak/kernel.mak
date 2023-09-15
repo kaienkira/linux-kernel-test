@@ -17,7 +17,7 @@ kernel-compile:
 		make $(LINUX_KERNEL_ENV) \
 			KCONFIG_ALLCONFIG=../../settings/kernel_config allnoconfig
 	cd $(LINUX_KERNEL_SRC_DIR) && \
-		make $(LINUX_KERNEL_ENV) bzImage -j$(NPROC)
+		make $(LINUX_KERNEL_ENV) bzImage modules -j$(NPROC)
 
 kernel-install:
 	cp $(LINUX_KERNEL_SRC_DIR)/build/arch/x86_64/boot/bzImage bin/vmlinuz
