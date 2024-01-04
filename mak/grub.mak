@@ -1,4 +1,4 @@
-GRUB_SRC_DIR = $(abspath src/grub-2.06)
+GRUB_SRC_DIR = $(abspath src/grub-2.12)
 
 .PHONY: grub-build grub-clean
 
