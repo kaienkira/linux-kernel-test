@@ -11,11 +11,7 @@ src_dir=`readlink -f "$script_path"/../src`
 cd "$src_dir"
 if [ $? -ne 0 ]; then exit 1; fi
 
-find . -maxdepth 1 -name '*.tar.gz' -exec tar -zxvf {} \;
-if [ $? -ne 0 ]; then exit 1; fi
-find . -maxdepth 1 -name '*.tar.xz' -exec tar -Jxvf {} \;
-if [ $? -ne 0 ]; then exit 1; fi
-find . -maxdepth 1 -name '*.tar.bz2' -exec tar -jxvf {} \;
+find . -maxdepth 1 -name '*.tar.*' -exec tar -xvf {} \;
 if [ $? -ne 0 ]; then exit 1; fi
 
 exit 0
