@@ -27,7 +27,7 @@ download_file()
     fi
 }
 
-download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.8.tar.xz'
+download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.9.9.tar.xz'
 download_file 'http://ftp.gnu.org/gnu/glibc/glibc-2.39.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libmnl/files/libmnl-1.0.5.tar.bz2'
