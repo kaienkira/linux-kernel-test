@@ -14,5 +14,6 @@ src/libmnl-*
 src/libnetfilter_conntrack-*
 src/libnfnetlink-*
 src/libnftnl-*
+src/libxcrypt-*
 src/linux-*
 src/nftables-*

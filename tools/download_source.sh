@@ -29,6 +29,7 @@ download_file()
 
 download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.10.11.tar.xz'
 download_file 'http://ftp.gnu.org/gnu/glibc/glibc-2.40.tar.xz'
+download_file 'https://github.com/besser82/libxcrypt/releases/download/v4.4.36/libxcrypt-4.4.36.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libmnl/files/libmnl-1.0.5.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libnftnl/files/libnftnl-1.2.6.tar.xz'

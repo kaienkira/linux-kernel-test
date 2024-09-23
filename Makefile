@@ -28,6 +28,7 @@ build: \
 create_install_dir \
 kernel-build \
 glibc-build \
+libxcrypt-build \
 busybox-build \
 libmnl-build \
 libnftnl-build \
@@ -45,6 +46,7 @@ vmdk.router
 clean: \
 kernel-clean \
 glibc-clean \
+libxcrypt-clean \
 busybox-clean \
 libmnl-clean \
 libnftnl-clean \
@@ -78,6 +80,7 @@ clean_install_dir \
 create_install_dir \
 kernel-install \
 glibc-install \
+libxcrypt-install \
 busybox-install \
 libmnl-install \
 libnftnl-install \
@@ -117,6 +120,7 @@ vmdk.router:
 
 include mak/kernel.mak
 include mak/glibc.mak
+include mak/libxcrypt.mak
 include mak/busybox.mak
 include mak/libmnl.mak
 include mak/libnftnl.mak
