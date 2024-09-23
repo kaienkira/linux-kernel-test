@@ -19,7 +19,7 @@ vi /etc/systemd/network/91-qemu0.netdev
 
 vi /etc/systemd/network/91-qemu1.netdev
     [NetDev]
-    Name=qemu0
+    Name=qemu1
     Kind=tap
 
     [Tap]
