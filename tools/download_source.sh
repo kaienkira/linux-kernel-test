@@ -27,7 +27,7 @@ download_file()
     fi
 }
 
-download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.11.4.tar.xz'
+download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.11.5.tar.xz'
 download_file 'http://ftp.gnu.org/gnu/glibc/glibc-2.40.tar.xz'
 download_file 'https://github.com/besser82/libxcrypt/releases/download/v4.4.36/libxcrypt-4.4.36.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
