@@ -1,4 +1,4 @@
-LIBXCRYPT_SRC_DIR = $(abspath src/libxcrypt-4.4.36)
+LIBXCRYPT_SRC_DIR = $(abspath src/libxcrypt-4.4.37)
 
 .PHONY: \
 libxcrypt-build \
