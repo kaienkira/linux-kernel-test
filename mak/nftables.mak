@@ -1,4 +1,4 @@
-NFTABLES_SRC_DIR = $(abspath src/nftables-1.0.9)
+NFTABLES_SRC_DIR = $(abspath src/nftables-1.1.1)
 
 .PHONY: \
 nftables-build \

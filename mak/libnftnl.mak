@@ -1,4 +1,4 @@
-LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.6)
+LIBNFTNL_SRC_DIR = $(abspath src/libnftnl-1.2.8)
 
 .PHONY: \
 libnftnl-build \

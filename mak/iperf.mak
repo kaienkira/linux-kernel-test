@@ -1,4 +1,4 @@
-IPERF_SRC_DIR = $(abspath src/iperf-3.17.1)
+IPERF_SRC_DIR = $(abspath src/iperf-3.18)
 
 .PHONY: \
 iperf-build \
