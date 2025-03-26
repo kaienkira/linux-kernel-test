@@ -36,7 +36,7 @@ download_file 'https://www.netfilter.org/projects/libnftnl/files/libnftnl-1.2.8.
 download_file 'https://www.netfilter.org/projects/libnfnetlink/files/libnfnetlink-1.0.2.tar.bz2'
 download_file 'https://www.netfilter.org/projects/libnetfilter_conntrack/files/libnetfilter_conntrack-1.0.9.tar.bz2'
 download_file 'https://www.netfilter.org/projects/nftables/files/nftables-1.1.1.tar.xz'
-download_file 'https://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-6.13.0.tar.xz'
+download_file 'https://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-6.14.0.tar.xz'
 download_file 'https://github.com/esnet/iperf/releases/download/3.18/iperf-3.18.tar.gz'
 download_file 'https://matt.ucc.asn.au/dropbear/releases/dropbear-2024.86.tar.bz2'
 download_file 'https://ftp.gnu.org/gnu/grub/grub-2.12.tar.xz'
