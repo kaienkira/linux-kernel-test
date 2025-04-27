@@ -1,4 +1,4 @@
-DROPBEAR_SRC_DIR = $(abspath src/dropbear-2024.86)
+DROPBEAR_SRC_DIR = $(abspath src/dropbear-2025.87)
 
 .PHONY: \
 dropbear-build \
