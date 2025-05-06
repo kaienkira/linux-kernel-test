@@ -36,7 +36,6 @@ libnfnetlink-build \
 libnetfilter_conntrack-build \
 nftables-build \
 iproute2-build \
-iperf-build \
 dropbear-build \
 grub-build \
 strip \
@@ -54,7 +53,6 @@ libnfnetlink-clean \
 libnetfilter_conntrack-clean \
 nftables-clean \
 iproute2-clean \
-iperf-clean \
 dropbear-clean \
 grub-clean \
 clean_install_dir
@@ -88,7 +86,6 @@ libnfnetlink-install \
 libnetfilter_conntrack-install \
 nftables-install \
 iproute2-install \
-iperf-install \
 dropbear-install \
 strip
 
@@ -128,6 +125,5 @@ include mak/libnfnetlink.mak
 include mak/libnetfilter_conntrack.mak
 include mak/nftables.mak
 include mak/iproute2.mak
-include mak/iperf.mak
 include mak/dropbear.mak
 include mak/grub.mak
