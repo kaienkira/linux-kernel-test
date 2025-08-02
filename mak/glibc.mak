@@ -1,4 +1,4 @@
-GLIBC_SRC_DIR = $(abspath src/glibc-2.41)
+GLIBC_SRC_DIR = $(abspath src/glibc-2.42)
 
 .PHONY: \
 glibc-build \
