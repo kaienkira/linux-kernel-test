@@ -9,11 +9,11 @@ libnfnetlink-install
 libnfnetlink-build: libnfnetlink-compile libnfnetlink-install
 
 libnfnetlink-clean:
-	rm -rf $(LIBNFNETLINK_SRC_DIR)/build
+	rm -rf "$(LIBNFNETLINK_SRC_DIR)"/build
 
 libnfnetlink-compile:
-	mkdir -p $(LIBNFNETLINK_SRC_DIR)/build
-	cd $(LIBNFNETLINK_SRC_DIR)/build && \
+	mkdir -p "$(LIBNFNETLINK_SRC_DIR)"/build
+	cd "$(LIBNFNETLINK_SRC_DIR)"/build && \
 		../configure \
 			CFLAGS="-O2 -I$(INSTALL_DIR)/include" \
 			LDFLAGS="-L$(INSTALL_DIR)/lib" \
@@ -24,7 +24,7 @@ libnfnetlink-compile:
 		make DESTDIR=`readlink -f _install` install
 
 libnfnetlink-install:
-	cp -r $(LIBNFNETLINK_SRC_DIR)/build/_install/include/* \
-		$(INSTALL_DIR)/include/
-	cp -P $(LIBNFNETLINK_SRC_DIR)/build/_install/lib/libnfnetlink.so* \
-		$(INSTALL_DIR)/lib/
+	cp -r "$(LIBNFNETLINK_SRC_DIR)"/build/_install/include/* \
+		"$(INSTALL_DIR)"/include/
+	cp -P "$(LIBNFNETLINK_SRC_DIR)"/build/_install/lib/libnfnetlink.so* \
+		"$(INSTALL_DIR)"/lib/

@@ -9,11 +9,11 @@ libxcrypt-install
 libxcrypt-build: libxcrypt-compile libxcrypt-install
 
 libxcrypt-clean:
-	rm -rf $(LIBXCRYPT_SRC_DIR)/build
+	rm -rf "$(LIBXCRYPT_SRC_DIR)"/build
 
 libxcrypt-compile:
-	mkdir -p $(LIBXCRYPT_SRC_DIR)/build
-	cd $(LIBXCRYPT_SRC_DIR)/build && \
+	mkdir -p "$(LIBXCRYPT_SRC_DIR)"/build
+	cd "$(LIBXCRYPT_SRC_DIR)"/build && \
 		../configure \
 			CFLAGS="-O2" \
 			--prefix=/ \
@@ -23,7 +23,7 @@ libxcrypt-compile:
 		make DESTDIR=`readlink -f _install` install
 
 libxcrypt-install:
-	cp -r $(LIBXCRYPT_SRC_DIR)/build/_install/include/* \
-		$(INSTALL_DIR)/include/
-	cp -P $(LIBXCRYPT_SRC_DIR)/build/_install/lib/libcrypt.so* \
-		$(INSTALL_DIR)/lib/
+	cp -r "$(LIBXCRYPT_SRC_DIR)"/build/_install/include/* \
+		"$(INSTALL_DIR)"/include/
+	cp -P "$(LIBXCRYPT_SRC_DIR)"/build/_install/lib/libcrypt.so* \
+		"$(INSTALL_DIR)"/lib/

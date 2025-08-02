@@ -9,11 +9,11 @@ dropbear-install
 dropbear-build: dropbear-compile dropbear-install
 
 dropbear-clean:
-	rm -rf $(DROPBEAR_SRC_DIR)/build
+	rm -rf "$(DROPBEAR_SRC_DIR)"/build
 
 dropbear-compile:
-	mkdir -p $(DROPBEAR_SRC_DIR)/build
-	cd $(DROPBEAR_SRC_DIR)/build && \
+	mkdir -p "$(DROPBEAR_SRC_DIR)"/build
+	cd "$(DROPBEAR_SRC_DIR)"/build && \
 		../configure \
 			CFLAGS="-O2 -I$(INSTALL_DIR)/include" \
 			LDFLAGS="-L$(INSTALL_DIR)/lib" \
@@ -24,9 +24,9 @@ dropbear-compile:
 		make DESTDIR=`readlink -f _install` install
 
 dropbear-install:
-	cp -P $(DROPBEAR_SRC_DIR)/build/_install/sbin/dropbear \
-		$(INSTALL_DIR)/sbin/
-	cp -P $(DROPBEAR_SRC_DIR)/build/_install/bin/dbclient \
-		$(INSTALL_DIR)/bin/
-	cp -P $(DROPBEAR_SRC_DIR)/build/_install/bin/dropbearkey \
-		$(INSTALL_DIR)/bin/
+	cp -P "$(DROPBEAR_SRC_DIR)"/build/_install/sbin/dropbear \
+		"$(INSTALL_DIR)"/sbin/
+	cp -P "$(DROPBEAR_SRC_DIR)"/build/_install/bin/dbclient \
+		"$(INSTALL_DIR)"/bin/
+	cp -P "$(DROPBEAR_SRC_DIR)"/build/_install/bin/dropbearkey \
+		"$(INSTALL_DIR)"/bin/

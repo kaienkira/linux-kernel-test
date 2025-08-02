@@ -4,9 +4,9 @@ GRUB_SRC_DIR = $(abspath src/grub-2.12)
 
 grub-build:
 	# build hack
-	echo "depends bli part_gpt" > $(GRUB_SRC_DIR)/grub-core/extra_deps.lst
-	mkdir -p $(GRUB_SRC_DIR)/build
-	cd $(GRUB_SRC_DIR)/build && \
+	echo "depends bli part_gpt" > "$(GRUB_SRC_DIR)"/grub-core/extra_deps.lst
+	mkdir -p "$(GRUB_SRC_DIR)"/build
+	cd "$(GRUB_SRC_DIR)"/build && \
 		../configure \
 			LDFLAGS="--static" \
 			--disable-werror \
@@ -26,4 +26,4 @@ grub-build:
 		make DESTDIR=`readlink -f _install` install
 
 grub-clean:
-	rm -rf $(GRUB_SRC_DIR)/build
+	rm -rf "$(GRUB_SRC_DIR)"/build

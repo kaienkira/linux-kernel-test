@@ -9,11 +9,11 @@ libmnl-install
 libmnl-build: libmnl-compile libmnl-install
 
 libmnl-clean:
-	rm -rf $(LIBMNL_SRC_DIR)/build
+	rm -rf "$(LIBMNL_SRC_DIR)"/build
 
 libmnl-compile:
-	mkdir -p $(LIBMNL_SRC_DIR)/build
-	cd $(LIBMNL_SRC_DIR)/build && \
+	mkdir -p "$(LIBMNL_SRC_DIR)"/build
+	cd "$(LIBMNL_SRC_DIR)"/build && \
 		../configure \
 			CFLAGS="-O2" \
 			--prefix=/ \
@@ -23,7 +23,7 @@ libmnl-compile:
 		make DESTDIR=`readlink -f _install` install
 
 libmnl-install:
-	cp -r $(LIBMNL_SRC_DIR)/build/_install/include/* \
-		$(INSTALL_DIR)/include/
-	cp -P $(LIBMNL_SRC_DIR)/build/_install/lib/libmnl.so* \
-		$(INSTALL_DIR)/lib/
+	cp -r "$(LIBMNL_SRC_DIR)"/build/_install/include/* \
+		"$(INSTALL_DIR)"/include/
+	cp -P "$(LIBMNL_SRC_DIR)"/build/_install/lib/libmnl.so* \
+		"$(INSTALL_DIR)"/lib/

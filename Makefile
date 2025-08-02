@@ -59,19 +59,19 @@ clean_install_dir
 	rm -rf bin/*
 
 create_install_dir:
-	mkdir -p $(INSTALL_DIR)/bin
-	mkdir -p $(INSTALL_DIR)/sbin
-	mkdir -p $(INSTALL_DIR)/etc
-	mkdir -p $(INSTALL_DIR)/include
-	mkdir -p $(INSTALL_DIR)/lib
+	mkdir -p "$(INSTALL_DIR)"/bin
+	mkdir -p "$(INSTALL_DIR)"/sbin
+	mkdir -p "$(INSTALL_DIR)"/etc
+	mkdir -p "$(INSTALL_DIR)"/include
+	mkdir -p "$(INSTALL_DIR)"/lib
 
 clean_install_dir:
-	rm -rf $(INSTALL_DIR)
+	rm -rf "$(INSTALL_DIR)"
 
 strip:
-	find $(INSTALL_DIR)/bin -type f -exec strip {} \;
-	find $(INSTALL_DIR)/sbin -type f -exec strip {} \;
-	find $(INSTALL_DIR)/lib -type f -exec strip {} \;
+	find "$(INSTALL_DIR)"/bin -type f -exec strip {} \;
+	find "$(INSTALL_DIR)"/sbin -type f -exec strip {} \;
+	find "$(INSTALL_DIR)"/lib -type f -exec strip {} \;
 
 reinstall: \
 clean_install_dir \
@@ -92,13 +92,13 @@ strip
 initramfs: initramfs.main initramfs.router initramfs.local
 
 initramfs.main:
-	bash tools/build_initramfs.sh main $(INSTALL_DIR)
+	bash tools/build_initramfs.sh main "$(INSTALL_DIR)"
 
 initramfs.router:
-	bash tools/build_initramfs.sh router $(INSTALL_DIR)
+	bash tools/build_initramfs.sh router "$(INSTALL_DIR)"
 
 initramfs.local:
-	bash tools/build_initramfs.sh local $(INSTALL_DIR)
+	bash tools/build_initramfs.sh local "$(INSTALL_DIR)"
 
 run.main:
 	bash tools/run_qemu.sh main nographic
@@ -113,7 +113,7 @@ run.local:
 	bash tools/run_qemu.sh local nographic
 
 vmdk.router:
-	bash tools/build_vmdk.sh router $(INSTALL_DIR) $(GRUB_SRC_DIR)
+	bash tools/build_vmdk.sh router "$(INSTALL_DIR)" "$(GRUB_SRC_DIR)"
 
 include mak/kernel.mak
 include mak/glibc.mak
