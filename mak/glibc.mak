@@ -18,7 +18,7 @@ glibc-compile:
 		    CFLAGS='-O2' \
 			--prefix=/usr \
 			--with-headers="$(INSTALL_DIR)"/include \
-			--enable-kernel=6.12 \
+			--enable-kernel=6.15 \
 			--disable-profile \
 			--disable-timezone-tools \
 			--disable-build-nscd \
