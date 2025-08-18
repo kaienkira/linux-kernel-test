@@ -2,6 +2,10 @@
 
 ```
 pacman -S base-devel bc qemu-full curl rsync cpio python-setuptools parted
+make download
+make extract_src
+make build
+make run.main
 
 vi /etc/systemd/network/90-brqemu0.netdev
     [NetDev]
