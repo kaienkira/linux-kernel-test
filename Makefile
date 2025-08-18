@@ -3,9 +3,11 @@ NPROC = $(shell expr `nproc` - 1)
 
 .PHONY: \
 default \
+sync_source \
 download_source \
 extract_source \
 force_extract_source \
+touch_source_dir \
 build \
 clean \
 create_install_dir \
@@ -23,6 +25,8 @@ run.local
 
 default: run.main
 
+sync_source: download_source extract_source touch_source_dir
+
 download_source:
 	bash tools/download_source.sh
 
@@ -32,6 +36,9 @@ extract_source:
 force_extract_source:
 	find src/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
 	bash tools/extract_source.sh
+
+touch_source_dir:
+	find src/ -mindepth 1 -maxdepth 1 -type d -exec touch {} \;
 
 build: \
 create_install_dir \
