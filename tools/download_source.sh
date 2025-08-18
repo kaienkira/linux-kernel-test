@@ -14,20 +14,31 @@ if [ $? -ne 0 ]; then exit 1; fi
 download_file()
 {
     local url=$1
-    local rename_file=$2
+    local file_name=$2
 
-    echo "start download $url"
-
-    if [ ! -z "$rename_file" ]
+    if [ -z "$filename" ]
     then
-        curl -L -o "$rename_file" "$url"
-    else
-        curl -L -O "$url"
-        if [ $? -ne 0 ]; then exit 1; fi
+        file_name=`basename "$url"`
     fi
+
+    # file already exists
+    if [ -f "$src_dir"/"$file_name" ]
+    then
+        return 0
+    fi
+
+    # delete old version file
+    local package_name=${file_name%%-*}
+    find "$src_dir" -maxdepth 1 -type f -name "${package_name}*" -delete
+
+    echo "start download $url -> $file_name"
+    curl -L -o "$file_name" "$url"
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    return 0
 }
 
-download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz'
+download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.1.tar.xz'
 download_file 'https://ftp.gnu.org/gnu/glibc/glibc-2.42.tar.xz'
 download_file 'https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.36.1.tar.bz2'

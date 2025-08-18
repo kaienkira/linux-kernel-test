@@ -4,6 +4,7 @@ NPROC = $(shell expr `nproc` - 1)
 .PHONY: \
 default \
 download \
+extract_src \
 build \
 clean \
 create_install_dir \
@@ -23,6 +24,10 @@ default: run.main
 
 download:
 	bash tools/download_source.sh
+
+extract_src:
+	find src/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
+	find src/ -type f -name '*.tar.*' -exec tar -xvf {} -C src/ \;
 
 build: \
 create_install_dir \
