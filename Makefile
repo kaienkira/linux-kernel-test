@@ -3,8 +3,9 @@ NPROC = $(shell expr `nproc` - 1)
 
 .PHONY: \
 default \
-download \
-extract_src \
+download_source \
+extract_source \
+force_extract_source \
 build \
 clean \
 create_install_dir \
@@ -22,12 +23,15 @@ run.local
 
 default: run.main
 
-download:
+download_source:
 	bash tools/download_source.sh
 
-extract_src:
+extract_source:
+	bash tools/extract_source.sh
+
+force_extract_source:
 	find src/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
-	find src/ -type f -name '*.tar.*' -exec tar -xvf {} -C src/ \;
+	bash tools/extract_source.sh
 
 build: \
 create_install_dir \

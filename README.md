@@ -2,8 +2,8 @@
 
 ```
 pacman -S base-devel bc qemu-full curl rsync cpio python-setuptools parted
-make download
-make extract_src
+make download_source
+make extract_source
 make build
 make run.main
 
