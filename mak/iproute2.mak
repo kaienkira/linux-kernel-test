@@ -1,4 +1,4 @@
-IPROUTE2_SRC_DIR = $(abspath src/iproute2-6.16.0)
+IPROUTE2_SRC_DIR = $(abspath src/iproute2-6.17.0)
 
 .PHONY: \
 iproute2-build \
