@@ -1,4 +1,4 @@
-LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.16.9)
+LINUX_KERNEL_SRC_DIR = $(abspath src/linux-6.17.1)
 LINUX_KERNEL_ENV = O=build ARCH=x86
 
 .PHONY: \
