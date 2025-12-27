@@ -38,7 +38,7 @@ download_file()
     return 0
 }
 
-download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.1.tar.xz'
+download_file 'https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.2.tar.xz'
 download_file 'https://ftp.gnu.org/gnu/glibc/glibc-2.42.tar.xz'
 download_file 'https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz'
 download_file 'https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
