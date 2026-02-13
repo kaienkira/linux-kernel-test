@@ -15,7 +15,7 @@ libxcrypt-compile:
 	mkdir -p "$(LIBXCRYPT_SRC_DIR)"/build
 	cd "$(LIBXCRYPT_SRC_DIR)"/build && \
 		../configure \
-			CFLAGS="-O2" \
+			CFLAGS="-O2 -Wno-discarded-qualifiers" \
 			--prefix=/ \
 			--disable-static && \
 		make -j$(NPROC) && \
