@@ -32,7 +32,7 @@ download_file()
     find "$src_dir" -maxdepth 1 -type f -name "${package_name}*" -delete
 
     echo "start download $url -> $file_name"
-    curl -L -o "$file_name" "$url"
+    curl -fSL -o "$file_name" "$url"
     if [ $? -ne 0 ]; then exit 1; fi
 
     return 0
