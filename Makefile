@@ -3,15 +3,15 @@ NPROC = $(shell expr `nproc` - 1)
 
 .PHONY: \
 default \
-sync_source \
-download_source \
-extract_source \
-force_extract_source \
-touch_source_dir \
+sync-source \
+download-source \
+extract-source \
+force-extract-source \
+touch-source-dir \
 build \
 clean \
-create_install_dir \
-clean_install_dir \
+create-install-dir \
+clean-install-dir \
 strip \
 reinstall \
 initramfs \
@@ -25,23 +25,23 @@ run.local
 
 default: run.main
 
-sync_source: download_source extract_source touch_source_dir
+sync-source: download-source extract-source touch-source-dir
 
-download_source:
+download-source:
 	bash tools/download_source.sh
 
-extract_source:
+extract-source:
 	bash tools/extract_source.sh
 
-force_extract_source:
+force-extract-source:
 	find src/ -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
 	bash tools/extract_source.sh
 
-touch_source_dir:
+touch-source-dir:
 	find src/ -mindepth 1 -maxdepth 1 -type d -exec touch {} \;
 
 build: \
-create_install_dir \
+create-install-dir \
 kernel-build \
 glibc-build \
 libxcrypt-build \
@@ -71,17 +71,17 @@ nftables-clean \
 iproute2-clean \
 dropbear-clean \
 grub-clean \
-clean_install_dir
+clean-install-dir
 	rm -rf bin/*
 
-create_install_dir:
+create-install-dir:
 	mkdir -p "$(INSTALL_DIR)"/bin
 	mkdir -p "$(INSTALL_DIR)"/sbin
 	mkdir -p "$(INSTALL_DIR)"/etc
 	mkdir -p "$(INSTALL_DIR)"/include
 	mkdir -p "$(INSTALL_DIR)"/lib
 
-clean_install_dir:
+clean-install-dir:
 	rm -rf "$(INSTALL_DIR)"
 
 strip:
@@ -90,8 +90,8 @@ strip:
 	find "$(INSTALL_DIR)"/lib -type f -exec strip {} \;
 
 reinstall: \
-clean_install_dir \
-create_install_dir \
+clean-install-dir \
+create-install-dir \
 kernel-install \
 glibc-install \
 libxcrypt-install \
