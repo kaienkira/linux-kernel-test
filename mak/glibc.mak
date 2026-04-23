@@ -23,6 +23,7 @@ glibc-compile:
 			--disable-timezone-tools \
 			--disable-build-nscd \
 			--disable-nscd \
+			--disable-werror \
 			--without-gd \
 			--without-selinux && \
 		make -j$(NPROC) && \
