@@ -1,10 +1,10 @@
-GRUB_SRC_DIR = $(abspath src/grub-2.12)
+GRUB_SRC_DIR = $(abspath src/grub-2.14)
 
 .PHONY: grub-build grub-clean
 
 grub-build:
 	# build hack
-	echo "depends bli part_gpt" > "$(GRUB_SRC_DIR)"/grub-core/extra_deps.lst
+	# echo "depends bli part_gpt" > "$(GRUB_SRC_DIR)"/grub-core/extra_deps.lst
 	mkdir -p "$(GRUB_SRC_DIR)"/build
 	cd "$(GRUB_SRC_DIR)"/build && \
 		../configure \

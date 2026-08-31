@@ -1,4 +1,4 @@
-LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.0.9)
+LIBNETFILTER_CONNTRACK_SRC_DIR = $(abspath src/libnetfilter_conntrack-1.1.1)
 
 .PHONY: \
 libnetfilter_conntrack-build \
