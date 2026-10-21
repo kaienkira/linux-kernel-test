@@ -1,6 +1,6 @@
 #!bin/bash
 
-set -o pipefail
+set -uo pipefail
 
 script_name=`basename "$0"`
 script_abs_name=`readlink -f "$0"`
@@ -14,9 +14,9 @@ if [ $? -ne 0 ]; then exit 1; fi
 download_file()
 {
     local url=$1
-    local file_name=$2
+    local file_name=${2:-}
 
-    if [ -z "$filename" ]
+    if [ -z "$file_name" ]
     then
         file_name=`basename "$url"`
     fi
